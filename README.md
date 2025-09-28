@@ -11,7 +11,7 @@ If you want to see some of my contributions, click on the folders above. <br>
 # Project Highlights
 ---
 
-![vesper_banner](/_Images/ZmxUP5.png)
+![sunseed_banner](/_Images/ZmxUP5.png)
 
 
 ## [___Sun Seed Vegan Knights___](/Vesper) &nbsp; ← Click for more!
@@ -38,7 +38,7 @@ Team:       3 Programmers, 4 Artist
 ---
 ---
 
-![epos_banner](/PortfolioBilder/bean bandit.png)
+![bandig_banner](/PortfolioBilder/beanbandit.png)
 
 ## ___Epos___
 
