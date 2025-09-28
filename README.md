@@ -38,7 +38,7 @@ Team:       3 Programmers, 4 Artist
 ---
 ---
 
-![epos_banner](/_Images/epos_banner.png)
+![epos_banner](/PortfolioBilder/bean bandit.png)
 
 ## ___Epos___
 
@@ -52,12 +52,8 @@ Team:       4 Programmers, 4 Artists
 
 <table>
   <tr>
-    <td width="50%"><img src="/_Images/epos-gameplay (6).jpg" /></td>
-    <td width="50%"><img src="/_Images/epos-gameplay (3).jpg" /></td>
-  </tr>
-  <tr>
-    <td width="50%"><img src="/_Images/epos-gameplay (5).jpg" /></td>
-    <td width="50%"><img src="/_Images/epos (1).jpg" /></td>
+    <td width="50%"><img src="/PortfolioBilder/upgrade.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/bandit1.png" /></td>
   </tr>
 </table>
 
