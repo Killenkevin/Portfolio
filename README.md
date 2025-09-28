@@ -14,14 +14,14 @@ If you want to see some of my contributions, click on the folders above. <br>
 ![vesper_banner](/_Images/ZmxUP5.png)
 
 
-## [___Vesper___](/Vesper) &nbsp; ← Click for more!
+## [___Sun Seed Vegan Knights___](/Vesper) &nbsp; ← Click for more!
 
 ```
-Developed:  09/2023 - 10/2023
+Developed:  11/2024 - 12/2024
 Duration:   7 weeks
 Engine:     Unity
-Genre:      Skill-based Puzzle Platformer
-Team:       3 Programmers, 3 Artist
+Genre:      2D Action Game / Hack-and-Slash
+Team:       3 Programmers, 4 Artist
 ```
 
 <table>
