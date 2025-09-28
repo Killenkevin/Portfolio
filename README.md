@@ -26,12 +26,12 @@ Team:       3 Programmers, 4 Artist
 
 <table>
   <tr>
-    <td width="50%"><img src="/_Images/vesper (2).jpg" /></td>
-    <td width="50%"><img src="/_Images/vesper (1).jpg" /></td>
+    <td width="50%"><img src="/PortfolioBilder/MenuScreenTemp.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/sunseed2.png" /></td>
   </tr>
   <tr>
-    <td width="50%"><img src="/_Images/vesper (3).jpg" /></td>
-    <td width="50%"><img src="/_Images/vesper (5).jpg" /></td>
+    <td width="50%"><img src="/PortfolioBilder/sunseed3.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/sunseed1.png" /></td>
   </tr>
 </table>
 
