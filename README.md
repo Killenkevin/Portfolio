@@ -1,19 +1,17 @@
-# Mitch Nguyen's Portfolio
-
-<img src="https://media.giphy.com/media/AO5qaphTxRnyw/giphy.gif" width="100%">
+# Kevin Körmark's Portfolio
 
 Hi, ___welcome___ to my portfolio.
 
 ### Info
 
 Below you can find previews of my highlighted projects. <br>
-Feel free to give their names a _\*click*_ to see my contributions. <br>
+If you want to see some of my contributions, click on the folders above. <br>
 <br>
 
 # Project Highlights
 ---
 
-![vesper_banner](/_Images/vesper_thumb_16_9_v2.png)
+![vesper_banner](/_Images/ZmxUP5.png)
 
 
 ## [___Vesper___](/Vesper) &nbsp; ← Click for more!
