@@ -43,11 +43,11 @@ Team:       3 Programmers, 4 Artist
 ## ___Epos___
 
 ```
-Developed:  04/2024 - 06/2024
+Developed:  01/2025 - 03/2025
 Duration:   8 Weeks
-Engine:     Unreal Engine 5
-Genre:      Casual Story Adventure
-Team:       4 Programmers, 4 Artists
+Engine:     Unity 
+Genre:      2D Shooter, Mobile game
+Team:       Solo project
 ```
 
 <table>
