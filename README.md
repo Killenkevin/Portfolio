@@ -11,7 +11,7 @@ If you want to see some of my contributions, click on the folders above. <br>
 # Project Highlights
 ---
 
-![vesper_banner](/_Images/vesper_thumb_16_9_v2.png)
+![vesper_banner](/_Images/ZmxUP5.png)
 
 
 ## [___Vesper___](/Vesper) &nbsp; ← Click for more!
