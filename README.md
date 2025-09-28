@@ -38,7 +38,7 @@ Team:       3 Programmers, 4 Artist
 ---
 ---
 
-![bandig_banner](/PortfolioBilder/beanbandit.png)
+![bandit_banner](/PortfolioBilder/beanbandit.png)
 
 ## ___Epos___
 
