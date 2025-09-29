@@ -1,6 +1,6 @@
 # __Sun Seed Vegan Knights__
 
-![vesper_banner](/_Images/vesper_thumb_16_9_v2.png)
+![vesper_banner](/_Images/ZmxUP5.png)
 
 ```
 Developed:  09/2023 - 10/2023
