@@ -25,10 +25,10 @@ Team:       3 Programmers, 4 Artist
 </table>
 
 ## _A Brief Game Description_
-Vesper, a skill-based puzzle platformer. Play as a formless celestial being that has been trapped in a physical form. Use the ability to change size and find your way home!
+Sun Seed Vegan Knights, a multiplayer mission based hack & slash game. You and your friends gets placed in a level where your mission is to eliminate the enemy and protect the objective
 
-[Webpage (itch.io)](https://yrgo-game-creator.itch.io/vesper) <br>
-[Trailer](https://youtu.be/9p0B5Zs0Df8)
+[Webpage (itch.io)]([https://yrgo-game-creator.itch.io/vesper](https://yrgo-game-creator.itch.io/sun-seed)) <br>
+[Trailer]([https://youtu.be/9p0B5Zs0Df8](https://www.youtube.com/watch?v=URABgAn8mho))
 
 ## _My Roles in the Project_
 
