@@ -14,7 +14,7 @@ If you want to see some of my contributions, click on the folders above. <br>
 ![sunseed_banner](/_Images/ZmxUP5.png)
 
 
-## [___Sun Seed Vegan Knights___](/Vesper) &nbsp; ← Click for more!
+## [___Sun Seed Vegan Knights___](/Sunseed) &nbsp; ← Click for more!
 
 ```
 Developed:  11/2024 - 12/2024
