@@ -1,23 +1,26 @@
 # __Sun Seed Vegan Knights__
 
-![vesper_banner](/_Images/ZmxUP5.png)
+![sunseed_banner](/_Images/ZmxUP5.png)
+
+
+## [___Sun Seed Vegan Knights___](/Sunseed) &nbsp; ← Click for more!
 
 ```
-Developed:  09/2023 - 10/2023
+Developed:  11/2024 - 12/2024
 Duration:   7 weeks
 Engine:     Unity
-Genre:      Skill-based Puzzle Platformer
-Team:       3 Programmers, 3 Artist
+Genre:      2D Action Game / Hack-and-Slash
+Team:       3 Programmers, 4 Artist
 ```
 
 <table>
   <tr>
-    <td width="50%"><img src="/_Images/vesper (2).jpg" /></td>
-    <td width="50%"><img src="/_Images/vesper (1).jpg" /></td>
+    <td width="50%"><img src="/PortfolioBilder/MenuScreenTemp.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/sunseed2.png" /></td>
   </tr>
   <tr>
-    <td width="50%"><img src="/_Images/vesper (3).jpg" /></td>
-    <td width="50%"><img src="/_Images/vesper (5).jpg" /></td>
+    <td width="50%"><img src="/PortfolioBilder/sunseed3.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/sunseed1.png" /></td>
   </tr>
 </table>
 
