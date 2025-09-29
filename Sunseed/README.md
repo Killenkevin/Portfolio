@@ -1,4 +1,4 @@
-# __Vesper__
+# __Sun Seed Vegan Knights__
 
 ![vesper_banner](/_Images/vesper_thumb_16_9_v2.png)
 
