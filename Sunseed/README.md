@@ -27,8 +27,8 @@ Team:       3 Programmers, 4 Artist
 ## _A Brief Game Description_
 Sun Seed Vegan Knights, a multiplayer mission based hack & slash game. You and your friends gets placed in a level where your mission is to eliminate the enemy and protect the objective
 
-[Webpage (itch.io)]([https://yrgo-game-creator.itch.io/vesper](https://yrgo-game-creator.itch.io/sun-seed)) <br>
-[Trailer]([https://youtu.be/9p0B5Zs0Df8](https://www.youtube.com/watch?v=URABgAn8mho))
+[Webpage (itch.io)]([https://yrgo-game-creator.itch.io/vesper](https://yrgo-game-creator.itch.io/sun-seed) <br>
+[Trailer]([https://youtu.be/9p0B5Zs0Df8](https://www.youtube.com/watch?v=URABgAn8mho)
 
 ## _My Roles in the Project_
 
