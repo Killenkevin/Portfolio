@@ -38,7 +38,7 @@ Team:       3 Programmers, 4 Artist
 ---
 ---
 
-![sunseed_banner](/_Images/ZmxUP5.png)
+![hotdog_banner](/PortfolioBilder/hotdog1.png)
 
 
 ## [___Hot Dog Madness___](/HotdogMadness) &nbsp; ← Click for more!
@@ -53,12 +53,12 @@ Team:       4 programmers
 
 <table>
   <tr>
-    <td width="50%"><img src="/PortfolioBilder/MenuScreenTemp.png" /></td>
-    <td width="50%"><img src="/PortfolioBilder/sunseed2.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/hotdog2.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/hotdog3.png" /></td>
   </tr>
   <tr>
-    <td width="50%"><img src="/PortfolioBilder/sunseed3.png" /></td>
-    <td width="50%"><img src="/PortfolioBilder/sunseed1.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/hotdog4.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/hotdog5.png" /></td>
   </tr>
 </table>
 
