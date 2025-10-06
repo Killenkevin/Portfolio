@@ -1,7 +1,5 @@
 # __Hot Dog Madness__
 
-![sunseed_banner](/PortfolioBilder/Hotdogicon.png)
-
 
 ## [___Sun Seed Vegan Knights___](/Sunseed) &nbsp; ← Click for more!
 
