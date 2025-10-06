@@ -389,9 +389,9 @@ public class RadioButton : MonoBehaviour
 
 <br>
 
-I implemented all the soundeffects/music used in the game, some of the effects I recorded myself.
-Some 3D modeling
-Helped with alot of small fixes around the game  <br>
+I implemented all the soundeffects/music used in the game, some of the effects I recorded myself. <br>
+<br>Some 3D modeling<br>
+<br>Helped with alot of small fixes around the game<br>
 
 <br>
 
