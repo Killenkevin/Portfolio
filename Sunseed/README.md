@@ -32,442 +32,297 @@ Sun Seed Vegan Knights, a multiplayer mission based hack & slash game. You and y
 
 ## _My Roles in the Project_
 
-I co-developed the player controls and mechanics alongside the other programmers, contributed to adding polish and “juice” to enhance the gameplay experience, and took on the role of Scrum Master throughout the project.
+I co-developed the player controls and mechanics alongside the other programmers, contributed to adding polish and “juice” to enhance the gameplay experience.
 
-My most significant contribution was the development of the majority of the interactive elements within the game world. This was made possible through close collaboration with the game designer and level designer, working together to brainstorm ideas and to bring their vision to life. This collaboration also extended beyond gameplay elements, allowing me to assist with animations, cutscenes, and VFX.
+My most significant contribution was the development of the tutorial aswell as some interactive elements within the game world. I took it upon myself to design and create the tutorial level which is a very important part of a game. Our game has some complex elements to it which makes it very important that the players understand the core mechanics before leaving the level.
 
 Below you’ll find a list of a few features I created and implemented myself, along with summaries of my code.
 
 # Contributions 
 
-### Juice
+### Frog
 	
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="/_GIFs/VesperSquishSquash.gif" alt="juice1" width="300" height="auto"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="/_GIFs/VesperSquishSquash1.gif" alt="juice1" width="300" height="auto"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br> |
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="/PortfolioGifs/Frog.gif" alt="juice1" width="800" height="auto"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
 |:---:|
 
 
-> *In the GIFs, the cube's particle systems have been disabled to highlight the SquishAndSquash.*
+> *In the GIFs, you can see the frog grabbing an enemy and eating it.*
 
 <details>
-  <summary>Give me the juice!</summary>
+  <summary>Frog!</summary>
 
 #### The Idea
-The concept was to make the cube's shape respond dynamically to its environment and movement.
+The concept was to make an objective that assists you in combat.
 
 #### The Logic
-The squish-squash mechanic works by temporarily scaling the object in a squashing (wider, shorter) or stretching (narrower, taller) manner using Lerp, and then smoothly reverting it back to its original size.
-The mechanic relies on a raycast system along with calculations of delta positions, as well as the `Jump()` and `LandingActions()` methods, to determine when to activate the effect.
+To have the frog assist you in combat you have to water it which is a core mechanic in Sun Seed. After you have watered it to the required number it starts shooting out its tounge at the nearest "Enemy" tagged object. The frog launches its toungue as a linerenderer, grabs enemy, eats it (destroys enemy) and it resets the timer.
 
 <br>
 
 *Click the dropdown arrows below to see the `code`!* <br>
 
 <details>
-<summary>Show SquishAndSquash.cs</summary>
+<summary>Show WaterObjective.cs</summary>
 
  ```cs
-public class SquishAndSquash : MonoBehaviour
+public class WaterObjective : MonoBehaviour
 {
-    public float squashAmount = 0.2f;
-    public float stretchAmount = 0.2f;
+    [SerializeField] private float maxWater = 1500f;
+    private float currentWater = 0f;
 
-    public float squishSquashDuration = 0.2f;
-    public float revertScaleDuration = 0.1f;
+    [SerializeField] private float waterDepletionRate = 5f;
+    private bool isComplete = false;
 
-    private Vector3 originalScale;
+    [SerializeField] private TMP_Text waterProgressText;
 
-    public bool squishAndSquashEnabled;
+    [SerializeField] private LineRenderer tongueLine;
+    [SerializeField] private Transform shootPoint;
+    [SerializeField] private float shootInterval = 0.5f;
+    [SerializeField] private float detectionRadius = 10.0f;
 
-    void Start()
-    {
-        squishAndSquashEnabled = true;
-        originalScale = transform.localScale;
-    }
+    [SerializeField] private Animator frogAnimator;
+    [SerializeField] private SpriteRenderer frogSpriteRenderer;
+    [SerializeField] private Sprite frogOpenMouthSprite;
 
-    public void JumpSquash()
-    {
-        if (!squishAndSquashEnabled) return;
-        StartCoroutine(SquishSquashOverTime(originalScale.x - stretchAmount, originalScale.y + stretchAmount));
-    }
-
-    public void LandSquish()
-    {
-        if (!squishAndSquashEnabled) return;
-        StartCoroutine(SquishSquashOverTime(originalScale.x + squashAmount, originalScale.y - squashAmount));
-    }
-
-    public void ToggleEnabled(bool boolean)
-    {
-        squishAndSquashEnabled = boolean;
-    }
-
-    IEnumerator SquishSquashOverTime(float targetX, float targetY)
-    {
-        Vector3 originalSize = transform.localScale;
-        Vector3 targetSize = new Vector3(targetX, targetY, originalSize.z);
-
-        float currentTime = 0.0f;
-
-        while (currentTime <= squishSquashDuration)
-        {
-            transform.localScale = Vector3.Lerp(originalSize, targetSize, currentTime / squishSquashDuration);
-            currentTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.localScale = targetSize;
-
-        // Revert back to original size
-        StartCoroutine(RevertOverTime(targetSize.x, targetSize.y, originalScale.x, originalScale.y));
-    }
-
-    IEnumerator RevertOverTime(float startX, float startY, float targetX, float targetY)
-    {
-        Vector3 startSize = new Vector3(startX, startY, transform.localScale.z);
-        Vector3 targetSize = new Vector3(targetX, targetY, transform.localScale.z);
-
-        float currentTime = 0.0f;
-
-        while (currentTime <= revertScaleDuration)
-        {
-            transform.localScale = Vector3.Lerp(startSize, targetSize, currentTime / revertScaleDuration);
-            currentTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.localScale = targetSize;
-    }
-}
-
-```
-</details>
-<details>
-  <summary>Show PlayerController.cs</summary>
-  
-```cs
-
-public class PlayerController : MonoBehaviour, IReset
-{
-
-# ...
-
-    // Irrelevant code in the following method is omitted for brevity
-    void Jump()
-    {
-        // Disable WallSquash
-        if (WallSquashEnabler != null)
-        {
-            StopCoroutine(WallSquashEnabler);
-        }
-
-        squishAndSquash.JumpSquash();
-    }
-
-# ...
-
-    void WallCollisionSquash()
-    {
-        if (!canMove || !wallCollisionSquash) return;
-
-        if (Math.Abs(transform.position.x - prevPos.x) > deltaPosThreshold &&
-            (!rayCastHandler.rightSide || !rayCastHandler.leftSide))
-        {
-            if ((prevRaycastLeft && !rayCastHandler.leftSide && rb.velocity.x < 0) ||
-                (prevRaycastRight && !rayCastHandler.rightSide && rb.velocity.x > 0))
-            {
-                squishAndSquash.JumpSquash();
-            }
-        }
-
-        prevRaycastRight = rayCastHandler.rightSide;
-        prevRaycastLeft = rayCastHandler.leftSide;
-        prevPos = transform.position;
-    }
-
-# ...
-
-    // Irrelevant code in the following method is omitted for brevity
-    private void LandingActions()
-    {
-        squishAndSquash.LandSquish();
-    }
-
-# ...
-
-}
-```
-
-</details>
-
-</details>
-
-<br>
-
-### Cutscene & VFX
-
-|<img src="/_GIFs/VesperCutscene.gif?version=2" width="80%" />|
-|---|
-
-<details>
-<summary>Show Cutscene & VFX</summary>
-
-#### The Idea
-The concept was to transition into a cinematic when the player encountered and picked up a power-up.
-
-#### Cinematic logic
-When the player picks up the power-up, control over movement is temporarily disabled, and the player character moves to a designated cutscene position. A list of GameObjects, including the player and vignettes, is triggered to play their respective animations. After a delay, the animations stop, and player control is restored.
-
-#### Outline VFX Logic
-The OutlineFxTrigger class spawns one or more outline GameObjects at a specified interval, while the OutlineFx class handles the growth and fading of each outline effect.
-> *The VFX referenced here is only the outline effect that expands, the rest of the VFX are particles systems activated on trigger.*
-
-<br>
-
-*Click the dropdown arrows below to see the `code`!* <br>
-
-<details>
-<summary>Show PowerUp.cs</summary>
-  
-```cs
-public class PowerUp : MonoBehaviour
-{
-    [Header("Power-Up")]
-    public bool enableLargeSize;
-    public bool enableSmallSize;
-
-    [Header("Sprite Effects")]
-    public bool spriteFade = true;
-    public bool outlineFx = true;
-
-    [Header("Movement")]
-    public bool stopPlayerMovement = true;
-    public bool movePlayerToPosition = true;
-    public Transform targetPosition;
-    public float moveDuration;
-
-    [Header("Animation")]
-    public bool playPlayerAnimation = true;
-    public bool playObjectsAnimation = true;
-    public float animationDuration;
-    public List<GameObject> animationObjects;
-    
-    [Header("Puls")]
-    [Range(0, 2)] public float sizeMulti = 1.02f;
-    private Vector3 origiScale;
-    private float pulsDuration = 1f;
-    private float pulsingTimer = 0f;
-    public float beatingDuration = 1f;
-
-    // Private variables
-    private bool cutscenePlayed = false;
-    private bool isSizeChange = false;
-    
-    // References
-    private FadeSprite fadeSprite;
-    private OutlineFxTrigger outlineFxTrigger;
-    private Rigidbody2D rb2d;
-
-    void Start()
-    {
-        origiScale = transform.localScale;
-        fadeSprite = GetComponent<FadeSprite>();
-        outlineFxTrigger = GetComponent<OutlineFxTrigger>();
-        rb2d = PlayerController.player.GetComponent<Rigidbody2D>();
-    }
-
-    void Update()
-    {
-        pulsingTimer += Time.deltaTime;
-
-        if (pulsingTimer >= pulsDuration && !isSizeChange)
-        {
-            isSizeChange = true;
-            Pulsing();
-            pulsingTimer = 0f;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player") && !cutscenePlayed)
-        {
-            if (gameObject.CompareTag("GetSmaller"))
-            {
-                AudioManager.Instance.GameplaySFX(AudioManager.Instance.powerUpSmallSound, AudioManager.Instance.powerUpSmallVolume);
-            }
-            else if (gameObject.CompareTag("GetLarger"))
-            {
-                AudioManager.Instance.GameplaySFX(AudioManager.Instance.powerUpLargeSound, AudioManager.Instance.powerUpLargeVolume);
-            }
-
-            SpriteFade();
-            OutlineFx();
-            StopPlayerMovement();
-            MovePlayerToCutscenePosition();
-            PlayObjectsAnimations(true);
-            PlayPlayerAnimation(true);
-
-            cutscenePlayed = true;
-
-            StartCoroutine(UnstopMovementAndStopAnimations());
-        }
-    }
-
-    void SpriteFade()
-    {
-        if (!spriteFade) return;
-        fadeSprite.FadeOut();
-    }
-
-    void OutlineFx()
-    {
-        if (!outlineFx) return;
-        outlineFxTrigger.PlayFx();
-    }
-
-    void StopPlayerMovement()
-    {
-        if (!stopPlayerMovement) return;
-
-        rb2d.velocity = Vector2.zero;
-        PlayerController.instance.canMove = false;
-        PlayerController.instance.bigEnabled = false;
-        PlayerController.instance.smallEnabled = false;
-    }
-
-    IEnumerator UnstopMovementAndStopAnimations()
-    {
-        yield return new WaitForSeconds(animationDuration);
-        PlayerController.instance.canMove = true;
-        PlayObjectsAnimations(false);
-        PlayPlayerAnimation(false);
-
-        EnableSize();
-    }
-
-    public void Pulsing()
-    {
-        var newScale = origiScale * sizeMulti;
-        Sequence sizeSeq = DOTween.Sequence();
-        sizeSeq.Append(transform.DOScale(newScale, beatingDuration / 2).SetEase(Ease.InSine))
-               .Append(transform.DOScale(origiScale, beatingDuration / 2).SetEase(Ease.InSine))
-               .OnComplete(() => isSizeChange = false);
-    }
-
-    private void EnableSize()
-    {
-        PlayerController.instance.bigEnabled = enableLargeSize;
-        PlayerController.instance.smallEnabled = enableSmallSize;
-    }
-
-    void MovePlayerToCutscenePosition()
-    {
-        if (!movePlayerToPosition) return;
-
-        rb2d.transform.DOMove(targetPosition.position, moveDuration);
-    }
-
-    void PlayObjectsAnimations(bool boolean)
-    {
-        if (!playObjectsAnimation) return;
-
-        // Enable animationObjects and their Animator
-        foreach (GameObject animationObject in animationObjects)
-        {
-            animationObject.SetActive(boolean);
-            Animator animator = animationObject.GetComponent<Animator>();
-
-            if (animator != null)
-            {
-                animator.enabled = boolean;
-            }
-        }
-    }
-
-    void PlayPlayerAnimation(bool boolean)
-    {
-        if (!playPlayerAnimation) return;
-
-        // Enable Player Animator
-        Animator playerAnimator = PlayerController.player.GetComponent<Animator>();
-        playerAnimator.enabled = boolean;
-    }
-}
-
-```
-</details>
-
-<details>
-<summary>Show OutlineFxTrigger.cs</summary>
-  
-```cs
-public class OutlineFxTrigger : MonoBehaviour
-{
-    public float outlineSpawnDelay = 0.3f;
-    public int numberOfOutlines = 1;
-    public GameObject outline;
-
-    public void PlayFx()
-    {
-        StartCoroutine(TriggerOutlineFx());
-    }
-    IEnumerator TriggerOutlineFx()
-    {
-        for (int i = 0; i < numberOfOutlines; i++)
-        {
-            Instantiate(outline, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(outlineSpawnDelay);
-        }
-    }
-}
-```
-</details>
-
-
-<details>
-<summary>Show OutlineFx.cs</summary>
-  
-```cs
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using DG.Tweening;
-
-public class OutlineFx : MonoBehaviour
-{
-    public float growDuration;
-    public float targetScale;
-    public float fadeDelay;
-    public Ease ease;
-    bool playing;
+    private bool isTurretActive = false;
 
     private void Start()
     {
-        TriggerEffect();
+        currentWater = 1; // starting water
+        UpdateProgressUI();
+        StartCoroutine(DepleteWater());
     }
-    
-    private void Update()
+
+    private void UpdateProgressUI()
     {
-        if (!playing)
+        if (waterProgressText != null)
         {
-            TriggerEffect();
+            waterProgressText.text = $"{Mathf.FloorToInt(currentWater)} / {Mathf.FloorToInt(maxWater)}";
         }
     }
 
-    void TriggerEffect()
+    public void AddWater(float amount)
     {
-        playing = true;
-        transform.DOScale(targetScale, growDuration).SetEase(ease);
-        StartCoroutine(TriggerFade());
+        if (!isComplete)
+        {
+            currentWater += amount;
+            currentWater = Mathf.Clamp(currentWater, 0, maxWater);
+            UpdateProgressUI();
+
+            if (currentWater >= maxWater)
+            {
+                CompleteObjective();
+            }
+        }
     }
 
-    IEnumerator TriggerFade()
+    private void CompleteObjective()
     {
-        yield return new WaitForSeconds(fadeDelay);
-        GetComponent<FadeSprite>().FadeOut();
+        isComplete = true;
+        StopCoroutine(DepleteWater());
+        ActivateTurret();
+    }
+
+    private IEnumerator DepleteWater()
+    {
+        while (!isComplete)
+        {
+            yield return new WaitForSeconds(1f);
+
+            if (currentWater >= maxWater || currentWater <= 0)
+            {
+                continue;
+            }
+            currentWater -= waterDepletionRate;
+            currentWater = Mathf.Max(currentWater, 0);
+            UpdateProgressUI();
+
+            if (currentWater <= 0)
+            {
+                break;
+            }
+        }
+    }
+
+    private void ActivateTurret()
+    {
+        isTurretActive = true;
+        StartCoroutine(Shoot());
+    }
+
+    private IEnumerator Shoot()
+    {
+        while (isTurretActive)
+        {
+            GameObject target = FindNearestEnemy();
+
+            if (target != null)
+            {
+                yield return StartCoroutine(ShootAtTarget(target));
+            }
+
+            yield return new WaitForSeconds(shootInterval);
+        }
+    }
+
+    private GameObject FindNearestEnemy()
+    {
+        EnemyHealthDisplay[] enemies = FindObjectsOfType<EnemyHealthDisplay>();
+        GameObject nearestEnemy = null;
+        float shortestDistance = detectionRadius;
+
+        foreach (EnemyHealthDisplay enemy in enemies)
+        {
+            float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+
+            if (distanceToEnemy < shortestDistance)
+            {
+                shortestDistance = distanceToEnemy;
+                nearestEnemy = enemy.gameObject;
+            }
+        }
+
+        return nearestEnemy;
+    }
+    private IEnumerator ShootAtTarget(GameObject target)
+    {
+        if (tongueLine != null && shootPoint != null)
+        {
+            if (frogAnimator != null)
+            {
+                frogAnimator.enabled = false;
+            }
+            if (frogSpriteRenderer != null && frogOpenMouthSprite != null)
+            {
+                frogSpriteRenderer.sprite = frogOpenMouthSprite;
+            }
+
+                float shootSpeed = 120f;
+                Vector2 startPosition = shootPoint.position;
+                Vector2 endPosition = target != null ? target.transform.position : startPosition;
+                float distance = Vector2.Distance(startPosition, endPosition);
+                float time = 0;
+
+                tongueLine.SetPosition(0, startPosition);
+
+                float maxTongueDuration = 5f; 
+                float elapsedTongueTime = 0f;
+
+                while (time < distance / shootSpeed && elapsedTongueTime < maxTongueDuration)
+                {
+                    if (target == null || !target.activeInHierarchy)
+                    {
+                        break;
+                    }
+
+                    time += Time.deltaTime;
+                    elapsedTongueTime += Time.deltaTime;
+                    Vector2 currentPoint = Vector2.Lerp(startPosition, endPosition, time / (distance / shootSpeed));
+                    tongueLine.SetPosition(1, new Vector3(currentPoint.x, currentPoint.y, 0));
+                    yield return null;
+                }
+
+            tongueLine.SetPosition(0, Vector3.zero);
+            tongueLine.SetPosition(1, Vector3.zero);
+
+            if (frogAnimator != null)
+            {
+                frogAnimator.enabled = true;
+            }
+
+            if (target != null && target.activeInHierarchy)
+            {
+                Health targetHealth = target.GetComponent<Health>();
+                if (targetHealth != null)
+                {
+                    if (targetHealth.GetCurrentHealth() <= 5)
+                    {
+                        targetHealth.TakeDamage(150);
+                    }
+                    else if (targetHealth.GetCurrentHealth() <= 150)
+                    {
+                        yield return StartCoroutine(DragTargetToFrog(target));
+                        targetHealth.TakeDamage(150);
+                    }
+                    else
+                    {
+                        targetHealth.TakeDamage(150);
+                    }
+                }
+            }
+        }
+    }
+    private IEnumerator DragTargetToFrog(GameObject target)
+    {
+        if (target == null || !target.activeInHierarchy)
+        {
+            yield break; 
+        }
+
+        BloomRecipient bloomRecipient = target.GetComponent<BloomRecipient>();
+        if (bloomRecipient != null)
+        {
+            bloomRecipient.ResetForDrag();
+        }
+        
+        if (frogAnimator != null)
+        {
+            frogAnimator.enabled = false;
+        }
+        if (frogSpriteRenderer != null && frogOpenMouthSprite != null)
+        {
+            frogSpriteRenderer.sprite = frogOpenMouthSprite;
+        }
+
+        Vector3 startPosition = target.transform.position;
+        Vector3 endPosition = shootPoint.position;
+        float dragSpeed = 0.6f;
+        float time = 0;
+
+        if (target.TryGetComponent(out Rigidbody2D rb))
+        {
+            rb.velocity = Vector2.zero;
+            rb.isKinematic = true;
+        }
+
+        Collider2D frogCollider = GetComponent<Collider2D>();
+        Collider2D targetCollider = target.GetComponent<Collider2D>();
+        if (frogCollider != null && targetCollider != null)
+        {
+            Physics2D.IgnoreCollision(frogCollider, targetCollider, true);
+        }
+
+        while (time < 1f)
+        {
+            if (target == null || !target.activeInHierarchy)
+            {
+                yield break; 
+            }
+
+            time += Time.deltaTime * dragSpeed;
+            Vector3 currentTargetPosition = Vector3.Lerp(startPosition, endPosition, time);
+            target.transform.position = currentTargetPosition;
+
+            tongueLine.SetPosition(0, shootPoint.position);
+            tongueLine.SetPosition(1, currentTargetPosition);
+
+            yield return null;
+        }
+
+        if (frogCollider != null && targetCollider != null)
+        {
+            Physics2D.IgnoreCollision(frogCollider, targetCollider, false);
+        }
+
+        tongueLine.SetPosition(0, Vector3.zero);
+        tongueLine.SetPosition(1, Vector3.zero);
+
+        if (frogAnimator != null)
+        {
+            frogAnimator.enabled = true;
+        }
     }
 }
-
 ```
 </details>
 
@@ -475,812 +330,682 @@ public class OutlineFx : MonoBehaviour
 
 <br>
 
-### Trampoline
+### Dialogue
 
-|<img src="/_GIFs/VesperTrampoline.gif" width="80%" />|
+|<img src="/PortfolioBilder/dialogue3.jpg" width="80%" />|
 |---|
 <details>
-<summary>Show Trampoline</summary>
+<summary>Show Dialogue</summary>
 
 #### The Idea
-The aim was to create a trampoline that provided a satisfying bounce that reacted to the player's size. We wanted to encourage the player to use the size-switch mechanic strategically to achieve the best possible bounce.
+The aim was to create a dialogue system for tutorial and also use the system in the hub for an interactable NPC. 
 
 #### The Logic 
-The trampoline applies a bounce force to the player on collision, with the force size determined by the player's gravity scale or Y-axis velocity. 
-Seeing as the player's gravity scale changes with their size, using the gravity scale as a parameter for the bounce force worked pretty well.
+This dialogue system automatically moves the camera between stages when all enemies in a stage are defeated, triggering stage-specific dialogues using a dynamic dialogue system that manages player input and action maps.
 
-Player movement is temporarily disabled to ensure a smoother bounce in the correct direction, and to prevent unwanted physics issues like double jumps or other glitches.
+Player movement is temporarily disabled to ensure that they read through the dialogue aswell as doesn't accidently skip anything.
 
 <br>
 
 *Click the dropdown arrows below to see the `code`!* <br>
 
 <details>
-<summary>Show Trampoline.cs</summary>
+<summary>Show Dialogue.cs</summary>
   
 ```cs
-public class Trampoline : MonoBehaviour
+public class Dialogue : MonoBehaviour
 {
-    [Header("Push mode")]
-    public bool usingGravityMultiplier;
-    public bool usingYVelocityMultiplier;
+    public TextMeshProUGUI textComponent;
+    [TextArea(3, 10)]
+    public string[] lines;
 
-    [Header("Values")]
-    public float gravityScaleMultiplier = 5;
-    public float yVelocityMultiplier = 0.1f;
-    public float maxBounceForce = 30;
-    public float bounceDelay = 0.1f;
-    
-    [HideInInspector]
-    public float bounceForce;
-
-    PlayerController player;
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            AudioManager.Instance.GameplaySFX(AudioManager.Instance.trampolineJump, AudioManager.Instance.trampolineJumpVolume);
-            player = other.gameObject.GetComponentInParent<PlayerController>();
-            var rb2d = player.GetComponent<Rigidbody2D>();
-
-            if (usingGravityMultiplier)
-            {
-                bounceForce += rb2d.gravityScale * gravityScaleMultiplier;
-            }
-
-            if (usingYVelocityMultiplier)
-            {
-                bounceForce += player.GetAbsoluteYVelocity() * yVelocityMultiplier;
-            }
-
-            if (bounceForce > maxBounceForce)
-            {
-                bounceForce = maxBounceForce;
-            }
-
-            if (rb2d != null)
-            {
-                player.isBouncing = true;
-                Vector2 bounceDirection = transform.up * bounceForce;
-                rb2d.AddForce(bounceDirection, ForceMode2D.Impulse);
-
-                StartCoroutine(EnableMovement());
-            }
-
-            bounceForce = 0;
-        }
-    }
-
-    IEnumerator EnableMovement()
-    {
-        yield return new WaitForSeconds(bounceDelay);
-        player.isBouncing = false;
-    }
-}
-
-```
-</details>
-
-<details>
-  <summary>Show PlayerController.cs</summary>
-  
-```cs
-  public class PlayerController : MonoBehaviour, IReset
-  {
-	#...
-		
-	private float currentMagnitude;
-	private float prevMagnitude;
-	
-	private List<float> yVelocities = new();
-	private int numberOfVelocitiesToRecord = 10;
-	
-	#...
-	
-	// Irrelevant code in the following method is omitted for brevity
-	void FixedUpdate()
-	{
-		RecordYVelocity();
-		RecordMagnitude();
-	}
-    
-	#...
-	
-	private void RecordMagnitude()
-	{
-		prevMagnitude = currentMagnitude;
-		currentMagnitude = rb.velocity.magnitude;
-	}
-	
-	internal float GetMagnitude()
-	{
-		if (prevMagnitude != 0) return prevMagnitude;
-		else return currentMagnitude;
-	}
-	
-	
-	internal float GetAbsoluteYVelocity()
-	{
-		for (int i = yVelocities.Count - 1; i >= 0; i--)
-		{
-		    if (yVelocities[i] > 0.0001f)
-		    {
-			return yVelocities[i];
-		    }
-		}
-	
-		return 0f;
-	}
-	
-	void RecordYVelocity()
-	{
-		yVelocities.Add(Mathf.Abs(rb.velocity.y));
-	
-		if (yVelocities.Count > numberOfVelocitiesToRecord)
-		{
-	    		yVelocities.RemoveAt(0);
-		}
-	}
-	
-	#...
-}
-```
-  
-</details>
-
-</details>
-
-<br>
-
-### Platforms
-
-|<img src="/_GIFs/VesperPlatformsShort.gif" width="80%" />|
-|---|
-
-<details>
-<summary>Show Platforms</summary>
-
-#### Platform Showcase
-Below, you'll find dropdowns containing GIFs of different platforms along with their associated code.
-
-<br>
-
-Click the dropdown arrows below to see the platforms! <br>
-
-<details>
-  <summary>Show Moving</summary>
-
-|<img src="/_GIFs/VesperPlatformMoving.gif" width="80%" />|
-|---|
-
-<br>
-
-*Click the dropdown arrow below to see `code`!* <br>
-
- <details>
-  <summary>Show Moving.cs</summary>
-    
-```cs
-public class Moving : MonoBehaviour, IReset
-{
-    [Header("Movement Settings")]
-    public float waitDuration;
-    public float speed = 1f;
-    public float percentageDistance;
-    [Range(0,1)] public float startPercentageDistance;
-
-    [Header("Coordinates")]
-    public List<Transform> coordinates;
-    Transform start;
-    Transform end;
-    int currentIndex;
-
-    Coroutine waitCoroutine;
-    bool move = true;
-
-    void Start()
-    {
-        RegisterSelfToResettableManager();
-        InitialValues();
-    }
-
-    void FixedUpdate()
-    {
-        if (move)
-        {
-            percentageDistance += Time.deltaTime * speed;
-            transform.position = Vector3.Lerp(start.position, end.position, percentageDistance);
-        }
-
-        if (percentageDistance >= 1)
-        {
-            waitCoroutine = StartCoroutine(Wait());
-            NextCycle();
-        }
-    }
-
-    void NextCycle()
-    {
-        percentageDistance = 0;
-        start = end;
-        currentIndex++;
-
-        if (currentIndex >= coordinates.Count)
-        {
-            currentIndex = 0;
-        }
-
-        end = coordinates[currentIndex];
-    }
-
-    IEnumerator Wait()
-    {
-        move = false;
-        yield return new WaitForSeconds(waitDuration);
-        move = true;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            var playerHandler = PlayerController.player.transform.parent.GetComponent<PlayerHandler>();
-            PlayerController.instance.rb.velocity += Vector2.up * speed;
-            if (playerHandler != null)
-            {
-                playerHandler.SetParent(transform);
-            }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            var playerHandler = PlayerController.player.transform.parent.GetComponent<PlayerHandler>();
-            if (playerHandler != null)
-            {
-                playerHandler.SetParent(null);
-            }
-        }
-    }
-
-    public void Reset()
-    {
-        InitialValues();
-    }
-
-    public void RegisterSelfToResettableManager()
-    {
-        ResettableManager.Instance?.RegisterObject(this);
-    }
-
-    private void InitialValues()
-    {
-        start = coordinates[0];
-        end = coordinates[1];
-        currentIndex = 1;
-        percentageDistance = startPercentageDistance;
-        move = true;
-
-        if (waitCoroutine != null)
-        {
-            StopCoroutine(waitCoroutine);
-        }
-    }
-}
-```
-  </details>
-
----
-
-<br>
-
-</details>
-
-<details>
-<summary>Show Disappearing</summary>
-	
-|<img src="/_GIFs/VesperPlatformDisappearing.gif" width="80%" />|
-|---|
-
-<br>
-
-*Click the dropdown arrow below to see `code`!* <br>
-
-<details>
-<summary>Show Disappearing.cs</summary>
-	
-```cs
-public class Disappearing : MonoBehaviour, IReset
-{
-    public float sustainTime = 1f;
-    public float cooldown = 0.5f;
-    public float reapperingParticleDuration = 1f;
-    public Color32 onTriggerColor;
-    private Color32 defaultColor;
-    
-    bool platformActive = true;
-    bool previousActive =  true;
-    bool playerOverlapping;
-    bool ongoingCoroutine;
-    Coroutine myCoroutine;
-
-    public GameObject platform;
-    SpriteRenderer platformSpriteRenderer;
-
-    public UnityEvent disappear;
-    public UnityEvent reappear;
-    public UnityEvent fadeIn;
-    public UnityEvent fadeOut;
-
-    private void Awake()
-    {
-        platformSpriteRenderer = platform.GetComponent<SpriteRenderer>();
-        defaultColor = platformSpriteRenderer.color;   
-    }
+    private int index;
+    private PlayerInput playerInput;
+    public UnityEvent<int> onDialogueLineChanged;
+    public string actionMapToDisable = "ControlActions1"; 
+    public bool IsDialogueActive { get; private set; } 
 
     private void Start()
     {
-        RegisterSelfToResettableManager();
+        textComponent.text = string.Empty;
+        StartDialogue(lines);
     }
 
-    private void Update()
+    public void OnPlayerJoined(PlayerInput playerInput)
     {
-        if (!platformActive)
+        if (this.playerInput == null)
         {
-            platform.SetActive(false);
-        }
-        else if (!playerOverlapping)
-        {
-            platform.SetActive(true);
+            this.playerInput = playerInput;
 
-            if (previousActive == false)
+            playerInput.actions["NextDialogue"].performed += OnNextDialoguePerformed;
+            playerInput.actions["PreviousDialogue"].performed += OnPreviousDialoguePerformed; 
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (playerInput != null)
+        {
+            playerInput.actions["NextDialogue"].performed -= OnNextDialoguePerformed;
+            playerInput.actions["PreviousDialogue"].performed -= OnPreviousDialoguePerformed;
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (playerInput != null)
+        {
+            playerInput.actions["NextDialogue"].Enable();
+            playerInput.actions["PreviousDialogue"].Enable();
+        }
+    }
+
+    private void OnNextDialoguePerformed(InputAction.CallbackContext context)
+    {
+        NextLine();
+    }
+
+    private void OnPreviousDialoguePerformed(InputAction.CallbackContext context)
+    {
+        PreviousLine();
+    }
+
+    public void StartDialogue(string[] newLines)
+    {
+        if (newLines == null || newLines.Length == 0)
+        {
+            return;
+        }
+
+        lines = newLines;
+        index = 0;
+        IsDialogueActive = true; 
+        gameObject.SetActive(true); 
+        DisplayLine();
+
+        DisableActionMap();
+    }
+
+    private void DisplayLine()
+    {
+        if (index >= 0 && index < lines.Length)
+        {
+            textComponent.text = lines[index];
+            onDialogueLineChanged?.Invoke(index);
+        }
+    }
+
+    private bool canAdvanceDialogue = true;
+
+    public void NextLine()
+    {
+        if (!canAdvanceDialogue) return;
+
+        StartCoroutine(DebounceDialogueAdvance());
+
+        if (index < lines.Length - 1)
+        {
+            index++;
+            DisplayLine();
+        }
+        else
+        {
+            EndDialogue();
+        }
+    }
+
+    private IEnumerator DebounceDialogueAdvance()
+    {
+        canAdvanceDialogue = false;
+        yield return new WaitForSeconds(0.01f); 
+        canAdvanceDialogue = true;
+    }
+
+    public void PreviousLine()
+    {
+        if (index > 0)
+        {
+            index--;
+            DisplayLine();
+        }
+    }
+
+    private void EndDialogue()
+    {
+        IsDialogueActive = false;
+        StartCoroutine(EndDialogueWithDelay(0.05f));
+    }
+
+    private IEnumerator EndDialogueWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        gameObject.SetActive(false);
+        textComponent.text = string.Empty;
+        EnableActionMap();
+    }
+    private PlayerInput dialogueControllerPlayer; 
+
+    private void DisableActionMap()
+    {
+        var players = FindObjectsOfType<PlayerInput>();
+
+        foreach (PlayerInput player in players)
+        {
+            if (player == dialogueControllerPlayer)
             {
-                fadeIn.Invoke();
-            }
-        }
-
-        previousActive = platformActive;
-    }
-
-    public void Disappear()
-    {
-        if (!ongoingCoroutine)
-        {
-            myCoroutine = StartCoroutine(DisappearAndComeBack());
-        }
-    }
-    IEnumerator DisappearAndComeBack()
-    {
-        ongoingCoroutine = true;
-  
-        platformSpriteRenderer.color = onTriggerColor;
-
-
-        yield return new WaitForSeconds(sustainTime);
-        platformActive = false;
-        disappear.Invoke();
-        AudioManager.Instance.GameplaySFX(AudioManager.Instance.disappearingPlatformSound, AudioManager.Instance.disappearingPlatformVolume);
-        yield return new WaitForSeconds(cooldown);
-        reappear.Invoke();
-        yield return new WaitForSeconds(reapperingParticleDuration);
-        platformActive = true;
-
-        AudioManager.Instance.GameplaySFX(AudioManager.Instance.appearingPlatformSound, AudioManager.Instance.appearingPlatformVolume);
-        platformSpriteRenderer.color = defaultColor;
-
-        ongoingCoroutine = false;
-    }
-
-    public void SetPlayerOverlapping(bool boolean)
-    {
-        playerOverlapping = boolean;
-    }
-
-    public void Reset()
-    {
-        if (ongoingCoroutine)
-        {
-            StopCoroutine(myCoroutine);
-            ongoingCoroutine = false;
-        }
-        platformActive = true;
-        previousActive = true;
-        platformSpriteRenderer.color = defaultColor;
-    }
-
-    public void RegisterSelfToResettableManager()
-    {
-        ResettableManager.Instance?.RegisterObject(this);
-    }
-}
-```
-
-
-</details>
-
----
-
-<br>
-
-</details>
-
-
-<details>
-<summary>Show Destructible</summary>
-	
-|<img src="/_GIFs/VesperPlatformDestructible.gif" width="80%" />|
-|---|
-
-<br>
-
-*Click the dropdown arrow below to see `code`!* <br>
-
-<details>
-    <summary>Show Destructible.cs</summary>
-  
-```cs
-public class Destructible : MonoBehaviour, IReset
-{
-    [Header("Terrain Objects")]
-    public List<GameObject> terrainObjects;
-
-    [Header("Particle Effects")]
-    public ParticleSystem destructionParticles;
-
-    private ScreenShakeHandler screenShakeHandler;
-    private bool ongoingCoroutine;
-
-    [Header("Respawn Settings")]
-    public bool respawnEnabled = false;
-    public float respawnDelay = 5f;
-
-    private void Start()
-    {
-        RegisterSelfToResettableManager();
-    }
-
-    public void TriggerDestroy()
-    {
-        if (ongoingCoroutine) return;
-
-        screenShakeHandler = Camera.main.GetComponent<ScreenShakeHandler>();
-        AudioManager.Instance.GameplaySFX(AudioManager.Instance.destructiblePlatfrom, AudioManager.Instance.destructiblePlatfromVolume);
-        
-        destructionParticles.Play();
-        screenShakeHandler.DestructionShake();
-        StartCoroutine(DestroyCoroutine());
-    }
-
-    private IEnumerator DestroyCoroutine()
-    {
-        ongoingCoroutine = true;
-
-        // Disable all terrain objects
-        foreach (GameObject obj in terrainObjects)
-        {
-            obj.SetActive(false);
-        }
-
-        // Handle respawn if enabled
-        if (respawnEnabled)
-        {
-            yield return new WaitForSeconds(respawnDelay);
-            foreach (GameObject obj in terrainObjects)
-            {
-                obj.SetActive(true);
-            }
-        }
-
-        ongoingCoroutine = false;
-    }
-
-    public void Reset()
-    {
-        // Ensure all terrain objects are active on reset
-        foreach (GameObject obj in terrainObjects)
-        {
-            obj.SetActive(true);
-        }
-    }
-
-    private void RegisterSelfToResettableManager()
-    {
-        ResettableManager.Instance.RegisterObject(this);
-    }
-}
-
-```
-  </details>
-
----
-
-<br>
-
-</details>
-
-
-<details>
-  <summary>Show Rising</summary>
-
-|<img src="/_GIFs/VesperPlatformRising.gif" width="80%" />|
-|---|
-
-<br>
-
-*Click the dropdown arrows below to see `code`!* <br>
-
-  <details>
-  <summary>Show RisingMovement.cs</summary>
-    
-  ```cs
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class RisingMovement : MonoBehaviour, IReset
-{
-    private enum States { DOWN, UP };
-
-    [Header("Values")]
-    public float targetHeight; // Target height for rising
-    public float TimerToTarget = 4; // Time to reach target height
-    public float durationOnTarget = 2; // Time to stay at target height
-
-    [HideInInspector]
-    public ParticleSystem rocks;
-
-    private Vector3 initialPosition;
-    private States currentState;
-    private float timer;
-    private float riseSpeed;
-
-    void Start()
-    {
-        rocks = GetComponentInChildren<ParticleSystem>();
-        initialPosition = transform.position;
-        currentState = States.DOWN;
-        RegisterSelfToResettableManager();
-
-        // Calculate the speed at which the object will rise
-        riseSpeed = (targetHeight - initialPosition.y) / TimerToTarget;
-    }
-
-    void Update()
-    {
-        Movement();
-    }
-
-    private void Movement()
-    {
-        timer -= Time.deltaTime;
-
-        switch (currentState)
-        {
-            case States.DOWN:
-                if (timer <= 0 && transform.position.y > initialPosition.y)
-                {
-                    MoveDown();
-                }
-                break;
-
-            case States.UP:
-                if (transform.position.y < targetHeight)
-                {
-                    MoveUp();
-                }
-                break;
-        }
-    }
-
-    private void MoveDown()
-    {
-        float step = riseSpeed * Time.deltaTime;
-        transform.Translate(Vector3.down * step);
-    }
-
-    private void MoveUp()
-    {
-        float step = riseSpeed * Time.deltaTime;
-        transform.Translate(Vector3.up * step);
-    }
-
-    public void Rise()
-    {
-        currentState = States.UP;
-    }
-
-    public void Descend()
-    {
-        if (currentState == States.DOWN) return;
-
-        currentState = States.DOWN;
-        timer = durationOnTarget;
-    }
-
-    public void ResetTimer()
-    {
-        timer = 0;
-    }
-
-    public void Reset()
-    {
-        timer = 0;
-        transform.position = initialPosition;
-        currentState = States.DOWN;
-    }
-
-    public void RegisterSelfToResettableManager()
-    {
-        ResettableManager.Instance?.RegisterObject(this);
-    }
-}
-  ```
-  </details>
-  
-  <details>
-  <summary>Show RisingButton.cs</summary>
-    
-  ```cs
-  public class RisingButton : MonoBehaviour, IReset
-{
-    // Takes in the moving platforms
-    public List<RisingMovement> platforms;
-   
-    // Animator anim;
-    public float pressedDistance;
-    public float timer;
-    private bool playerIsLarge;
-    private bool onMe;
-    private bool prevSize;
-    public Transform box;
-    private Vector3 stopPos;
-
-    private void Start()
-    {
-        stopPos = Vector3.zero;
-        RegisterSelfToResettableManager();
-    }
-    
-    public void Update()
-    {
-        timer += Time.deltaTime;
-        if(onMe)
-        {
-            if (playerIsLarge)
-            {
-                box.localPosition = Vector3.Lerp(Vector3.zero, Vector3.down * pressedDistance, timer);
+                player.SwitchCurrentActionMap("UI"); 
             }
             else
             {
-                box.localPosition = Vector3.Lerp(box.localPosition, Vector3.zero, Time.deltaTime * 4);
+                player.SwitchCurrentActionMap("Disabled"); 
             }
         }
-      
-        else
-        {
-            box.localPosition = Vector3.Lerp(box.localPosition, Vector3.zero, Time.deltaTime * 4);
-        }
+    }
 
-        playerIsLarge = PlayerController.instance.currentSize == Sizes.BIG;
-        
-        if(prevSize != playerIsLarge)
+    private void EnableActionMap()
+    {
+        foreach (PlayerInput player in FindObjectsOfType<PlayerInput>())
         {
-            if(playerIsLarge == false)
+            if (player == dialogueControllerPlayer)
             {
-                stopPos = box.transform.localPosition;
+                player.SwitchCurrentActionMap(actionMapToDisable); 
             }
-            timer = 0;
-        }
-        prevSize = playerIsLarge;
-    }
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            if (onMe == false)
+            else
             {
-                timer = 0;
-                onMe = true;
-            }
-
-            foreach (var platform in platforms)
-            {
-                if (playerIsLarge)
-                {
-                    platform.Rise();
-                }
-                else
-                {
-                    platform.Descend();
-
-                }
+                player.SwitchCurrentActionMap("ControlActions1"); 
             }
         }
-    }
-
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            foreach (var platform in platforms)
-            {
-                if (playerIsLarge)
-                {
-                    platform.Rise();
-                }
-                else
-                {
-                    platform.Descend();
-                }
-            }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            if (onMe == true)
-            {
-                onMe = false;
-                timer = 0;
-                stopPos = box.transform.localPosition;
-            }
-            foreach (var platform in platforms)
-                platform.Descend();
-        }
-    }
-
-    public void DescendPlatformsPromptly()
-    {
-        foreach (var platform in platforms)
-        {
-            platform.Descend();
-            platform.ResetTimer();
-        }
-    }
-
-    public void Reset()
-    {
-        stopPos = Vector3.zero;
-        box.transform.localPosition = Vector3.zero;
-    }
-
-    public void RegisterSelfToResettableManager()
-    {
-        ResettableManager.Instance?.RegisterObject(this);
     }
 }
-  ```
-  </details>
-</details>
 
-<br>
-
-#### IReset
-All platforms and relevant classes implement the `IReset` interface, enabling the resetting of objects upon player death without reloading the level. Each class that inherits from this interface includes a method to register itself with the `ResettableManager`. When a reset is required, the `ResettableManager` iterates through its list and invokes the reset function for each object.
-
-<details>
-<summary>Show IReset.cs</summary>
-  
-```cs
-using UnityEngine;
-
-public interface IReset
-{
-    void Reset();
-
-    void RegisterSelfToResettableManager();
-}
 ```
 </details>
 
+<details>
+  <summary>Show CameraMoverOnEnemyDeath.cs</summary>
+  
+```cs
+[System.Serializable]
+public class StageDialogue
+{
+    [TextArea(3, 10)]
+    public string[] dialogues;
+}
+
+public class CameraMoverOnEnemyDeath : MonoBehaviour
+{
+    public GameObject[] enemiesStage1;
+    public GameObject[] enemiesStage2;
+    public GameObject[] enemiesStage3;
+    public Transform[] cameraPositions;
+    public float cameraSpeed = 2f;
+    public Dialogue dialogueSystem;
+
+    public StageDialogue[] stageDialogues;
+
+    private int currentStage = 0;
+    private bool moveCamera = false;
+
+    void Start()
+    {
+        if (dialogueSystem == null || stageDialogues == null || stageDialogues.Length == 0)
+        {
+            return;
+        }
+        
+        dialogueSystem.gameObject.SetActive(false);
+    }
+    void Update()
+    {
+        if (currentStage < cameraPositions.Length && AreAllEnemiesDead(GetCurrentEnemies()))
+        {
+            moveCamera = true;
+        }
+
+        if (moveCamera)
+        {
+            MoveCameraToTarget();
+        }
+    }
+
+    public IEnumerator ShowDialogueAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        dialogueSystem.gameObject.SetActive(true);
+
+        if (stageDialogues.Length > 0)
+        {
+            dialogueSystem.StartDialogue(stageDialogues[currentStage].dialogues);
+        }
+    }
+
+    void MoveCameraToTarget()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, cameraPositions[currentStage].position, cameraSpeed * Time.deltaTime);
+
+        if (Vector3.Distance(transform.position, cameraPositions[currentStage].position) <= 0.1f)
+        {
+            transform.position = cameraPositions[currentStage].position;
+            moveCamera = false;
+            TriggerNextStage();
+        }
+    }
+
+    void TriggerNextStage()
+    {
+        currentStage++;
+
+        if (currentStage < stageDialogues.Length && dialogueSystem != null)
+        {
+            dialogueSystem.StartDialogue(stageDialogues[currentStage].dialogues);
+        }
+    }
+
+    GameObject[] GetCurrentEnemies()
+    {
+        switch (currentStage)
+        {
+            case 0: return enemiesStage1;
+            case 1: return enemiesStage2;
+            case 2: return enemiesStage3;
+            default: return new GameObject[0];
+        }
+    }
+
+    bool AreAllEnemiesDead(GameObject[] enemies)
+    {
+        foreach (GameObject enemy in enemies)
+        {
+            if (enemy != null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+  
 </details>
 
+<details>
+  <summary>Show EnableEnemyOnDialogue.cs</summary>
+  
+```cs
+public class EnableEnemyOnDialogue : MonoBehaviour
+{
+    public Dialogue dialogueSystem;
+    public GameObject enemyToEnable; 
+    public int dialogueIndexToEnableEnemy = 1; 
+
+    private bool enemyEnabled = false; 
+
+    private void Start()
+    {
+        if (dialogueSystem != null)
+        {
+            dialogueSystem.onDialogueLineChanged.AddListener(OnDialogueLineChanged);
+        }
+
+        if (enemyToEnable != null)
+        {
+            enemyToEnable.SetActive(false); 
+        }
+    }
+
+    private void OnDialogueLineChanged(int index)
+    {
+        if (!enemyEnabled && index == dialogueIndexToEnableEnemy)
+        {
+            if (enemyToEnable != null)
+            {
+                enemyToEnable.SetActive(true); 
+                enemyEnabled = true; 
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (dialogueSystem != null)
+        {
+            dialogueSystem.onDialogueLineChanged.RemoveListener(OnDialogueLineChanged);
+        }
+    }
+}
+```
+  
+</details>
+
+</details>
+
+
 <br>
+
+### Extras
+
+<details>
+<summary>Some other stuff I did</summary>
+
+#### Extra Showcase
+Below, you'll find some contributions I did aswell as some example code
+
+<br>
+
+I also worked on: Learning and implementing the new unity input system, enemies, sound, multiplayer, balancing, game design  <br>
+
+<br>
+
+Click the dropdown arrows below to see some example code! <br>
+
+<details>
+  <summary>Show Enemy</summary>
+<br>
+*Click the dropdown arrow below to see `code`!* <br>
+
+ <details>
+  <summary>Show Enemy.cs</summary>
+    
+```cs
+public class EnemyAttacks : MonoBehaviour
+{
+    Pathfinding pathfindingScript;
+
+    protected Vector3 targetPosition;
+    [HideInInspector] public float distenceToTarget;
+
+    public float distanceToAttack = 20;
+
+    [HideInInspector] public bool isAttacking = false;
+    [HideInInspector] public bool withinDistance = false;
+
+    NavMeshAgent agent;
+
+    private void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        pathfindingScript = GetComponent<Pathfinding>();
+    }
+
+    private void Update()
+    {
+        if (!(pathfindingScript.target.Count <= 0) && pathfindingScript.target[pathfindingScript.finalTarget] != null)
+        {
+            targetPosition = pathfindingScript.target[pathfindingScript.finalTarget].transform.position - transform.position;
+        }
+        
+     
+        distenceToTarget = targetPosition.sqrMagnitude;
+
+        if (distenceToTarget < distanceToAttack)
+        {
+            withinDistance = true;
+            pathfindingScript.followTarget = false;
+            if (pathfindingScript.trackTarget == true)
+            {
+                agent.velocity = Vector3.zero;
+            }
+        }
+
+        if (distenceToTarget > distanceToAttack && isAttacking == false)
+        {
+            pathfindingScript.followTarget = true;
+            withinDistance = false;
+        }
+    }
+}
+
+```
+  </details>
+
+---
+
+<br>
+
+</details>
+
+<details>
+<summary>Show PlayerAttack</summary>
+
+<br>
+
+*Click the dropdown arrow below to see `code`!* <br>
+
+<details>
+<summary>Show PlayerAttack.cs</summary>
+	
+```cs
+public class PlayerAttack : MonoBehaviour
+{
+    private GameObject weapon;
+
+    private Collider2D weaponCollider;
+
+    private Animator weaponAnimator;
+
+    private PlayerInput playerInput;
+    private InputAction fireAction;
+
+    private void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        if (playerInput != null)
+        {
+            fireAction = playerInput.actions["Fire"];
+        }
+        else
+        {
+            Debug.LogError("PlayerInput component is missing on this GameObject.");
+        }
+    }
+
+    private void Start()
+    {
+        weaponCollider = weapon.GetComponent<Collider2D>();
+        weaponAnimator = weapon.GetComponent<Animator>();
+
+        if (fireAction != null)
+        {
+            fireAction.performed += OnFirePerformed;
+        }
+        else
+        {
+            Debug.LogError("Fire action could not be found. Check the Input Action Asset.");
+        }
+    }
+
+    private void Update()
+    private void OnDestroy()
+    {
+        if (Input.GetKeyDown(KeyCode.Joystick1Button5))
+        if (fireAction != null)
+        {
+            weaponAnimator.SetTrigger("PressedR1");
+            fireAction.performed -= OnFirePerformed;
+        }
+    }
+
+    private void OnFirePerformed(InputAction.CallbackContext context)
+    {
+        weaponAnimator.SetTrigger("PressedR1");
+    }
+}
+```
+
+
+</details>
+
+---
+
+<br>
+
+</details>
+
+
+<details>
+<summary>Show PlayerJoined</summary>
+	
+
+<br>
+
+*Click the dropdown arrow below to see `code`!* <br>
+
+<details>
+    <summary>Show PlayedJoined.cs</summary>
+  
+```cs
+public class PlayerJoined : MonoBehaviour
+{
+    public Dialogue dialogueSystem;
+    public TextMeshProUGUI messageText;
+    private PlayerInputManager playerInputManager;
+    public CameraMoverOnEnemyDeath cameraMover;
+
+    private PlayerInput firstPlayerInput; 
+
+    private void Start()
+    {
+        if (messageText != null)
+        {
+            messageText.gameObject.SetActive(true);
+        }
+    }
+
+    void OnEnable()
+    {
+        playerInputManager = FindObjectOfType<PlayerInputManager>();
+        if (playerInputManager != null)
+        {
+            playerInputManager.onPlayerJoined += OnPlayerJoined;
+        }
+    }
+
+    void OnDisable()
+    {
+        if (playerInputManager != null)
+        {
+            playerInputManager.onPlayerJoined -= OnPlayerJoined;
+        }
+    }
+
+    public void OnPlayerJoined(PlayerInput playerInput)
+    {
+        if (playerInput.devices.Count > 0 && 
+            (playerInput.devices[0] is Keyboard || playerInput.devices[0] is Mouse))
+        {
+            Destroy(playerInput.gameObject);
+            return;
+        }
+
+        DontDestroyOnLoad(playerInput.gameObject);
+
+        if (firstPlayerInput == null)
+        {
+            firstPlayerInput = playerInput;
+            playerInput.SwitchCurrentActionMap("ControlActions1"); 
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("ControlActions1");
+        }
+
+        InputAction pauseAction = playerInput.actions["Pause"];
+        if (pauseAction != null)
+        {
+            pauseAction.Disable();
+            StartCoroutine(ReenablePauseAction(pauseAction));
+        }
+
+        PlayerAttack playerAttack = playerInput.GetComponent<PlayerAttack>();
+        if (playerAttack == null)
+        {
+            playerAttack = playerInput.gameObject.AddComponent<PlayerAttack>();
+        }
+        playerAttack.Initialize(playerInput);
+
+        if (messageText != null)
+        {
+            messageText.text = "Use   <voffset=0.3em><sprite=3></voffset>to move and   <voffset=0.3em><sprite=0></voffset>to rotate";
+            Invoke(nameof(HideMessage), 5f);
+        }
+
+        if (dialogueSystem != null && playerInput == firstPlayerInput) 
+        {
+            dialogueSystem.OnPlayerJoined(playerInput);
+
+            playerInput.actions["NextDialogue"].performed += context =>
+            {
+                if (dialogueSystem.IsDialogueActive)
+                {
+                    dialogueSystem.NextLine();
+                }
+            };
+
+            playerInput.actions["PreviousDialogue"].performed += context =>
+            {
+                if (dialogueSystem.IsDialogueActive)
+                {
+                    dialogueSystem.PreviousLine();
+                }
+            };
+        }
+    }
+
+    private IEnumerator ReenablePauseAction(InputAction pauseAction)
+    {
+        yield return null;
+        pauseAction.Enable();
+    }
+
+    private void HideMessage()
+    {
+        if (messageText != null)
+        {
+            messageText.gameObject.SetActive(false);
+        }
+        if (cameraMover != null)
+        {
+            StartCoroutine(StartDialogueCoroutine());
+        }
+        StartCoroutine(ShowSecondMessageCoroutine());
+    }
+
+    private IEnumerator StartDialogueCoroutine()
+    {
+        yield return cameraMover.ShowDialogueAfterDelay(3.5f);
+    }
+
+    private IEnumerator ShowSecondMessageCoroutine()
+    {
+        yield return new WaitForSeconds(0f);
+        if (messageText != null)
+        {
+            messageText.gameObject.SetActive(true);
+            messageText.text = "Press   <voffset=0.3em><sprite=2></voffset>to dash.";
+            Invoke(nameof(HideSecondMessage), 3.5f);
+        }
+    }
+
+    private void HideSecondMessage()
+    {
+        if (messageText != null)
+        {
+            messageText.gameObject.SetActive(false);
+        }
+    }
+}
+
+```
+  </details>
+
+---
+
+<br>
+
+</details>
+
+
 
 
 

@@ -38,6 +38,33 @@ Team:       3 Programmers, 4 Artist
 ---
 ---
 
+![sunseed_banner](/_Images/ZmxUP5.png)
+
+
+## [___Sun Seed Vegan Knights___](/Sunseed) &nbsp; ← Click for more!
+
+```
+Developed:  11/2024 - 12/2024
+Duration:   7 weeks
+Engine:     Unity
+Genre:      2D Action Game / Hack-and-Slash
+Team:       3 Programmers, 4 Artist
+```
+
+<table>
+  <tr>
+    <td width="50%"><img src="/PortfolioBilder/MenuScreenTemp.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/sunseed2.png" /></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="/PortfolioBilder/sunseed3.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/sunseed1.png" /></td>
+  </tr>
+</table>
+
+---
+---
+
 ![bandit_banner](/PortfolioBilder/beanbandit.png)
 
 ## ___Epos___
