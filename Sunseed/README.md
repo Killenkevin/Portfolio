@@ -766,13 +766,6 @@ public class EnemyAttacks : MonoBehaviour
 </details>
 
 <details>
-<summary>Show PlayerAttack</summary>
-
-<br>
-
-*Click the dropdown arrow below to see `code`!* <br>
-
-<details>
 <summary>Show PlayerAttack.cs</summary>
 	
 ```cs
@@ -832,24 +825,8 @@ public class PlayerAttack : MonoBehaviour
     }
 }
 ```
-
-
 </details>
 
----
-
-<br>
-
-</details>
-
-
-<details>
-<summary>Show PlayerJoined</summary>
-	
-
-<br>
-
-*Click the dropdown arrow below to see `code`!* <br>
 
 <details>
     <summary>Show PlayedJoined.cs</summary>
@@ -997,11 +974,6 @@ public class PlayerJoined : MonoBehaviour
 }
 
 ```
-  </details>
-
----
-
-<br>
 
 </details>
 
