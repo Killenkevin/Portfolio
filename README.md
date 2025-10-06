@@ -41,14 +41,14 @@ Team:       3 Programmers, 4 Artist
 ![sunseed_banner](/_Images/ZmxUP5.png)
 
 
-## [___Sun Seed Vegan Knights___](/Sunseed) &nbsp; ← Click for more!
+## [___Hot Dog Madness___](/HotdogMadness) &nbsp; ← Click for more!
 
 ```
-Developed:  11/2024 - 12/2024
-Duration:   7 weeks
+Developed:  08/2025 - 10/2025
+Duration:   5 weeks
 Engine:     Unity
-Genre:      2D Action Game / Hack-and-Slash
-Team:       3 Programmers, 4 Artist
+Genre:      VR game, work simulator
+Team:       4 programmers
 ```
 
 <table>
