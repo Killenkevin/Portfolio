@@ -1,6 +1,6 @@
-# __Sun Seed Vegan Knights__
+# __Hot Dog Madness__
 
-![sunseed_banner](/_Images/ZmxUP5.png)
+![sunseed_banner](/PortfolioBilder/Hotdogicon.png)
 
 
 ## [___Sun Seed Vegan Knights___](/Sunseed) &nbsp; ← Click for more!
@@ -15,26 +15,24 @@ Team:       3 Programmers, 4 Artist
 
 <table>
   <tr>
-    <td width="50%"><img src="/PortfolioBilder/MenuScreenTemp.png" /></td>
-    <td width="50%"><img src="/PortfolioBilder/sunseed2.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/hotdog1.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/hotdog2.png" /></td>
   </tr>
   <tr>
-    <td width="50%"><img src="/PortfolioBilder/sunseed3.png" /></td>
-    <td width="50%"><img src="/PortfolioBilder/sunseed1.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/hotdog3.png" /></td>
+    <td width="50%"><img src="/PortfolioBilder/hotdog4.png" /></td>
   </tr>
 </table>
 
 ## _A Brief Game Description_
-Sun Seed Vegan Knights, a multiplayer mission based hack & slash game. You and your friends gets placed in a level where your mission is to eliminate the enemy and protect the objective
+Hot Dog Madness, an emerging VR game where you work as a hot dog man. Fast paced game with a variation of orders and levels.
 
-[Webpage (itch.io)](https://yrgo-game-creator.itch.io/sun-seed) <br>
-[Trailer](https://www.youtube.com/watch?v=URABgAn8mho)
 
 ## _My Roles in the Project_
 
-I co-developed the player controls and mechanics alongside the other programmers, contributed to adding polish and “juice” to enhance the gameplay experience.
+I took it upon myself to make various mechanics such as the condiments, radio and all the sound in the game. 
 
-My most significant contribution was the development of the tutorial aswell as some interactive elements within the game world. I took it upon myself to design and create the tutorial level which is a very important part of a game. Our game has some complex elements to it which makes it very important that the players understand the core mechanics before leaving the level.
+My most significant contribution was the development of the condiments aswell as finding, mixing and implementing sounds to everything in the game.
 
 Below you’ll find a list of a few features I created and implemented myself, along with summaries of my code.
 
@@ -42,7 +40,7 @@ Below you’ll find a list of a few features I created and implemented myself, a
 
 ### Frog
 	
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="/PortfolioGifs/Frog.gif" alt="juice1" width="800" height="auto"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="/PortfolioGifs/Condiments.gif" alt="juice1" width="800" height="auto"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
 |:---:|
 
 
