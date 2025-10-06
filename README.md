@@ -47,7 +47,7 @@ Team:       3 Programmers, 4 Artist
 Developed:  08/2025 - 10/2025
 Duration:   5 weeks
 Engine:     Unity
-Genre:      VR game, work simulator
+Genre:      Virtual Reality, work simulator
 Team:       4 programmers
 ```
 
