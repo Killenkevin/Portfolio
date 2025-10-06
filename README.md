@@ -67,7 +67,7 @@ Team:       4 programmers
 
 ![bandit_banner](/PortfolioBilder/beanbandit.png)
 
-## ___Epos___
+## ___Bean Bandit___
 
 ```
 Developed:  01/2025 - 03/2025
