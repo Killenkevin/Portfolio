@@ -699,8 +699,6 @@ I also worked on: Learning and implementing the new unity input system, enemies,
 
 Click the dropdown arrows below to see some example code! <br>
 
-<details>
-
  <details>
   <summary>Show Enemy.cs</summary>
     
