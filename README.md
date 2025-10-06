@@ -11,7 +11,7 @@ If you want to see some of my contributions, click on the folders above. <br>
 # Project Highlights
 ---
 
-![sunseed_banner](/PortfolioBilder/Hotdogicon.png)
+![sunseed_banner](/_Images/ZmxUP5.png)
 
 
 ## [___Sun Seed Vegan Knights___](/Sunseed) &nbsp; ← Click for more!
@@ -38,7 +38,7 @@ Team:       3 Programmers, 4 Artist
 ---
 ---
 
-![sunseed_banner](/_Images/ZmxUP5.png)
+![sunseed_banner](/PortfolioBilder/hotdog1.png)
 
 
 ## [___Hot Dog Madness___](/HotdogMadness) &nbsp; ← Click for more!
