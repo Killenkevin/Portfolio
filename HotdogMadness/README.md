@@ -1,14 +1,11 @@
 # __Hot Dog Madness__
 
-
-## [___Sun Seed Vegan Knights___](/Sunseed) &nbsp; ← Click for more!
-
 ```
 Developed:  11/2024 - 12/2024
-Duration:   7 weeks
+Duration:   5 weeks
 Engine:     Unity
-Genre:      2D Action Game / Hack-and-Slash
-Team:       3 Programmers, 4 Artist
+Genre:      Virtual Reality, work simulator
+Team:       4 programmers
 ```
 
 <table>
@@ -36,19 +33,19 @@ Below you’ll find a list of a few features I created and implemented myself, a
 
 # Contributions 
 
-### Frog
+### Condiments
 	
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="/PortfolioGifs/Condiments.gif" alt="juice1" width="800" height="auto"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
 |:---:|
 
 
-> *In the GIFs, you can see the frog grabbing an enemy and eating it.*
+> *In the GIF, you can see the player pouring condiments over a hotdog.*
 
 <details>
-  <summary>Frog!</summary>
+  <summary>Condiments</summary>
 
 #### The Idea
-The concept was to make an objective that assists you in combat.
+Making an easy to use ketchup + mustard bottle that recognizes when you have the bottle upside down.
 
 #### The Logic
 To have the frog assist you in combat you have to water it which is a core mechanic in Sun Seed. After you have watered it to the required number it starts shooting out its tounge at the nearest "Enemy" tagged object. The frog launches its toungue as a linerenderer, grabs enemy, eats it (destroys enemy) and it resets the timer.
@@ -58,270 +55,210 @@ To have the frog assist you in combat you have to water it which is a core mecha
 *Click the dropdown arrows below to see the `code`!* <br>
 
 <details>
-<summary>Show WaterObjective.cs</summary>
+<summary>Show PourDetector.cs</summary>
 
  ```cs
-public class WaterObjective : MonoBehaviour
+public class PourDetector : MonoBehaviour
 {
-    [SerializeField] private float maxWater = 1500f;
-    private float currentWater = 0f;
+    [Header("Pour Settings")]
+    [Range(0, 180f)] public float pourThreshold = 100f; 
+    public Transform origin;
+    public Stream streamPrefab;
 
-    [SerializeField] private float waterDepletionRate = 5f;
-    private bool isComplete = false;
+    private Stream currentStream;
 
-    [SerializeField] private TMP_Text waterProgressText;
+    private XRGrabInteractable grab;
+    private bool isHeld;
+    private bool isTriggerPressed;
 
-    [SerializeField] private LineRenderer tongueLine;
-    [SerializeField] private Transform shootPoint;
-    [SerializeField] private float shootInterval = 0.5f;
-    [SerializeField] private float detectionRadius = 10.0f;
+    public AudioClip pourSound;
+    SoundObject currentPourSound;
 
-    [SerializeField] private Animator frogAnimator;
-    [SerializeField] private SpriteRenderer frogSpriteRenderer;
-    [SerializeField] private Sprite frogOpenMouthSprite;
-
-    private bool isTurretActive = false;
-
-    private void Start()
+    private void Awake()
     {
-        currentWater = 1; // starting water
-        UpdateProgressUI();
-        StartCoroutine(DepleteWater());
+        grab = GetComponent<XRGrabInteractable>();
     }
 
-    private void UpdateProgressUI()
+    private void OnEnable()
     {
-        if (waterProgressText != null)
-        {
-            waterProgressText.text = $"{Mathf.FloorToInt(currentWater)} / {Mathf.FloorToInt(maxWater)}";
-        }
+        if (!grab) return;
+
+        grab.selectEntered.AddListener(OnSelectEntered);
+        grab.selectExited.AddListener(OnSelectExited);
+
+        grab.activated.AddListener(OnActivated);
+        grab.deactivated.AddListener(OnDeactivated);
     }
 
-    public void AddWater(float amount)
+    private void OnDisable()
     {
-        if (!isComplete)
-        {
-            currentWater += amount;
-            currentWater = Mathf.Clamp(currentWater, 0, maxWater);
-            UpdateProgressUI();
+        if (!grab) return;
 
-            if (currentWater >= maxWater)
-            {
-                CompleteObjective();
-            }
-        }
+        grab.selectEntered.RemoveListener(OnSelectEntered);
+        grab.selectExited.RemoveListener(OnSelectExited);
+        grab.activated.RemoveListener(OnActivated);
+        grab.deactivated.RemoveListener(OnDeactivated);
     }
 
-    private void CompleteObjective()
+    private void OnSelectEntered(SelectEnterEventArgs args)
     {
-        isComplete = true;
-        StopCoroutine(DepleteWater());
-        ActivateTurret();
+        isHeld = true;
     }
 
-    private IEnumerator DepleteWater()
+    private void OnSelectExited(SelectExitEventArgs args)
     {
-        while (!isComplete)
-        {
-            yield return new WaitForSeconds(1f);
-
-            if (currentWater >= maxWater || currentWater <= 0)
-            {
-                continue;
-            }
-            currentWater -= waterDepletionRate;
-            currentWater = Mathf.Max(currentWater, 0);
-            UpdateProgressUI();
-
-            if (currentWater <= 0)
-            {
-                break;
-            }
-        }
+        isHeld = false;
+        isTriggerPressed = false;
+        EndPour();
     }
 
-    private void ActivateTurret()
+    private void OnActivated(ActivateEventArgs args)
     {
-        isTurretActive = true;
-        StartCoroutine(Shoot());
+        isTriggerPressed = true;
     }
 
-    private IEnumerator Shoot()
+    private void OnDeactivated(DeactivateEventArgs args)
     {
-        while (isTurretActive)
-        {
-            GameObject target = FindNearestEnemy();
-
-            if (target != null)
-            {
-                yield return StartCoroutine(ShootAtTarget(target));
-            }
-
-            yield return new WaitForSeconds(shootInterval);
-        }
+        isTriggerPressed = false;
+        EndPour();
     }
 
-    private GameObject FindNearestEnemy()
+    private void Update()
     {
-        EnemyHealthDisplay[] enemies = FindObjectsOfType<EnemyHealthDisplay>();
-        GameObject nearestEnemy = null;
-        float shortestDistance = detectionRadius;
+        bool shouldPour = isHeld && isTriggerPressed && IsTiltPastThreshold();
 
-        foreach (EnemyHealthDisplay enemy in enemies)
+        if (shouldPour && currentStream == null)
         {
-            float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
-
-            if (distanceToEnemy < shortestDistance)
-            {
-                shortestDistance = distanceToEnemy;
-                nearestEnemy = enemy.gameObject;
-            }
+            StartPour();
+        }
+        else if (!shouldPour && currentStream != null)
+        {
+            EndPour();
         }
 
-        return nearestEnemy;
+        if (currentStream != null && origin != null)
+            currentStream.transform.position = origin.position;
     }
-    private IEnumerator ShootAtTarget(GameObject target)
+
+    private bool IsTiltPastThreshold()
     {
-        if (tongueLine != null && shootPoint != null)
-        {
-            if (frogAnimator != null)
-            {
-                frogAnimator.enabled = false;
-            }
-            if (frogSpriteRenderer != null && frogOpenMouthSprite != null)
-            {
-                frogSpriteRenderer.sprite = frogOpenMouthSprite;
-            }
-
-                float shootSpeed = 120f;
-                Vector2 startPosition = shootPoint.position;
-                Vector2 endPosition = target != null ? target.transform.position : startPosition;
-                float distance = Vector2.Distance(startPosition, endPosition);
-                float time = 0;
-
-                tongueLine.SetPosition(0, startPosition);
-
-                float maxTongueDuration = 5f; 
-                float elapsedTongueTime = 0f;
-
-                while (time < distance / shootSpeed && elapsedTongueTime < maxTongueDuration)
-                {
-                    if (target == null || !target.activeInHierarchy)
-                    {
-                        break;
-                    }
-
-                    time += Time.deltaTime;
-                    elapsedTongueTime += Time.deltaTime;
-                    Vector2 currentPoint = Vector2.Lerp(startPosition, endPosition, time / (distance / shootSpeed));
-                    tongueLine.SetPosition(1, new Vector3(currentPoint.x, currentPoint.y, 0));
-                    yield return null;
-                }
-
-            tongueLine.SetPosition(0, Vector3.zero);
-            tongueLine.SetPosition(1, Vector3.zero);
-
-            if (frogAnimator != null)
-            {
-                frogAnimator.enabled = true;
-            }
-
-            if (target != null && target.activeInHierarchy)
-            {
-                Health targetHealth = target.GetComponent<Health>();
-                if (targetHealth != null)
-                {
-                    if (targetHealth.GetCurrentHealth() <= 5)
-                    {
-                        targetHealth.TakeDamage(150);
-                    }
-                    else if (targetHealth.GetCurrentHealth() <= 150)
-                    {
-                        yield return StartCoroutine(DragTargetToFrog(target));
-                        targetHealth.TakeDamage(150);
-                    }
-                    else
-                    {
-                        targetHealth.TakeDamage(150);
-                    }
-                }
-            }
-        }
+        float angleFromUp = Vector3.Angle(transform.up, Vector3.up);
+        return angleFromUp > pourThreshold;
     }
-    private IEnumerator DragTargetToFrog(GameObject target)
+
+    private void StartPour()
     {
-        if (target == null || !target.activeInHierarchy)
+        if (origin == null || streamPrefab == null) return;
+        currentStream = Instantiate(streamPrefab, origin.position, Quaternion.identity, transform);
+        currentStream.SetOrigin(origin);
+        currentStream.Begin();
+        currentPourSound = SoundManager.Instance.PlaySoundFX(pourSound, transform.position, transform, 1);
+    }
+
+    private void EndPour()
+    {
+        if (currentStream == null) return;
+        Destroy(currentStream.gameObject);
+        currentStream = null;
+
+        if (currentPourSound != null)
         {
-            yield break; 
-        }
-
-        BloomRecipient bloomRecipient = target.GetComponent<BloomRecipient>();
-        if (bloomRecipient != null)
-        {
-            bloomRecipient.ResetForDrag();
-        }
-        
-        if (frogAnimator != null)
-        {
-            frogAnimator.enabled = false;
-        }
-        if (frogSpriteRenderer != null && frogOpenMouthSprite != null)
-        {
-            frogSpriteRenderer.sprite = frogOpenMouthSprite;
-        }
-
-        Vector3 startPosition = target.transform.position;
-        Vector3 endPosition = shootPoint.position;
-        float dragSpeed = 0.6f;
-        float time = 0;
-
-        if (target.TryGetComponent(out Rigidbody2D rb))
-        {
-            rb.velocity = Vector2.zero;
-            rb.isKinematic = true;
-        }
-
-        Collider2D frogCollider = GetComponent<Collider2D>();
-        Collider2D targetCollider = target.GetComponent<Collider2D>();
-        if (frogCollider != null && targetCollider != null)
-        {
-            Physics2D.IgnoreCollision(frogCollider, targetCollider, true);
-        }
-
-        while (time < 1f)
-        {
-            if (target == null || !target.activeInHierarchy)
-            {
-                yield break; 
-            }
-
-            time += Time.deltaTime * dragSpeed;
-            Vector3 currentTargetPosition = Vector3.Lerp(startPosition, endPosition, time);
-            target.transform.position = currentTargetPosition;
-
-            tongueLine.SetPosition(0, shootPoint.position);
-            tongueLine.SetPosition(1, currentTargetPosition);
-
-            yield return null;
-        }
-
-        if (frogCollider != null && targetCollider != null)
-        {
-            Physics2D.IgnoreCollision(frogCollider, targetCollider, false);
-        }
-
-        tongueLine.SetPosition(0, Vector3.zero);
-        tongueLine.SetPosition(1, Vector3.zero);
-
-        if (frogAnimator != null)
-        {
-            frogAnimator.enabled = true;
+            currentPourSound.StopPlaying(); 
+            currentPourSound = null;
         }
     }
 }
+
 ```
 </details>
 
+<details>
+<summary>Show SauceBlobStainer.cs</summary>
+
+ ```cs
+[RequireComponent(typeof(ParticleSystem))]
+public class SauceBlobStainer : MonoBehaviour
+{
+    public GameObject blobPrefab;
+    public LayerMask stainLayers = ~0;
+    public string blobLayerName = "SauceSplat";
+
+    [Header("Spawn")]
+    public int blobsPerCollision = 3;      
+    public float minIntervalPerTarget = 0.01f; 
+    public float jitterRadius = 0.0025f;   
+    public float surfaceOffset = 0.0006f;   
+    public bool parentToHitObject = true;
+
+    private ParticleSystem ps;
+    private readonly List<ParticleCollisionEvent> buf = new();
+    private readonly Dictionary<Transform, float> lastTime = new();
+    private int blobLayer = -1;
+
+    private List<GameObject> spawnedBlobs = new List<GameObject>();
+    private bool hitFoodObject;
+
+    void Awake()
+    {
+        ps = GetComponent<ParticleSystem>();
+        blobLayer = LayerMask.NameToLayer(blobLayerName);
+    }
+
+    void OnParticleCollision(GameObject other)
+    {
+        if (ps == null || blobPrefab == null) return;
+        if (((1 << other.layer) & stainLayers) == 0) return;
+
+        int n = ParticlePhysicsExtensions.GetCollisionEvents(ps, other, buf);
+        if (n == 0) return;
+
+        Transform target = other.transform;
+        float now = Time.time;
+        if (!lastTime.TryGetValue(target, out float last)) last = 0f;
+        if (now - last < minIntervalPerTarget) return;
+
+        var e = buf[n - 1];
+        Vector3 pos = e.intersection;
+        Vector3 normal = e.normal;
+
+        SpawnBlobs(target, pos, normal);
+
+        lastTime[target] = now;
+    }
+
+    void SpawnBlobs(Transform target, Vector3 center, Vector3 normal)
+    {
+        Vector3 t = Vector3.Cross(normal, Vector3.up);
+        if (t.sqrMagnitude < 1e-4f) t = Vector3.Cross(normal, Vector3.right);
+        t.Normalize();
+        Vector3 b = Vector3.Cross(normal, t);
+
+        Transform parent = parentToHitObject ? target : null;
+        Quaternion rot = Quaternion.LookRotation(normal);
+
+        for (int i = 0; i < blobsPerCollision; i++)
+        {
+            Vector2 j2 = Random.insideUnitCircle * jitterRadius;
+            Vector3 j = t * j2.x + b * j2.y;
+            var go = Instantiate(blobPrefab, center + normal * surfaceOffset + j, rot);
+            if (parentToHitObject && target != null)
+            {
+                go.transform.SetParent(target, true);
+            }
+                
+            if (blobLayer != -1) SetLayerRecursively(go, blobLayer);
+        }
+    }
+
+    static void SetLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+        foreach (Transform c in obj.transform) SetLayerRecursively(c.gameObject, layer);
+    }
+}
+
+```
+</details>
 </details>
 
 <br>
