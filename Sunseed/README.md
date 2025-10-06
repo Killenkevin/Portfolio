@@ -3,7 +3,7 @@
 ![sunseed_banner](/_Images/ZmxUP5.png)
 
 
-## [___Sun Seed Vegan Knights___]
+## ___Sun Seed Vegan Knights___
 
 ```
 Developed:  11/2024 - 12/2024
