@@ -11,7 +11,7 @@ If you want to see some of my contributions, click on the folders above. <br>
 # Project Highlights
 ---
 
-![sunseed_banner](/_Images/ZmxUP5.png)
+![sunseed_banner](/PortfolioBilder/Hotdogicon.png)
 
 
 ## [___Sun Seed Vegan Knights___](/Sunseed) &nbsp; ← Click for more!
