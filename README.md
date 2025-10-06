@@ -38,7 +38,7 @@ Team:       3 Programmers, 4 Artist
 ---
 ---
 
-![sunseed_banner](/PortfolioBilder/hotdogicon.png)
+![sunseed_banner](/PortfolioBilder/Hotdogicon.png)
 
 
 ## [___Hot Dog Madness___](/HotdogMadness) &nbsp; ← Click for more!
