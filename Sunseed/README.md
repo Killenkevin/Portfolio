@@ -700,9 +700,6 @@ I also worked on: Learning and implementing the new unity input system, enemies,
 Click the dropdown arrows below to see some example code! <br>
 
 <details>
-  <summary>Show Enemy</summary>
-<br>
-*Click the dropdown arrow below to see `code`!* <br>
 
  <details>
   <summary>Show Enemy.cs</summary>
@@ -757,10 +754,6 @@ public class EnemyAttacks : MonoBehaviour
 }
 
 ```
-  </details>
-
----
-
 <br>
 
 </details>
