@@ -263,348 +263,116 @@ public class SauceBlobStainer : MonoBehaviour
 
 <br>
 
-### Dialogue
+### Radio
 
-|<img src="/PortfolioBilder/dialogue3.jpg" width="80%" />|
-|---|
 <details>
 <summary>Show Dialogue</summary>
 
 #### The Idea
-The aim was to create a dialogue system for tutorial and also use the system in the hub for an interactable NPC. 
+The aim was to create a working radio that the player could start, pause, resume, skip to the next song.
 
 #### The Logic 
-This dialogue system automatically moves the camera between stages when all enemies in a stage are defeated, triggering stage-specific dialogues using a dynamic dialogue system that manages player input and action maps.
+The radio has a list of songs it goes through. The two buttons on the radio dictates if the player wants to skip to the next song, pause, resume or play.
 
-Player movement is temporarily disabled to ensure that they read through the dialogue aswell as doesn't accidently skip anything.
+The buttons has to be kinematic since they have the grabable element on them. Makes it so the player can interact with it.
 
 <br>
 
 *Click the dropdown arrows below to see the `code`!* <br>
 
 <details>
-<summary>Show Dialogue.cs</summary>
+<summary>Show Radio.cs</summary>
   
 ```cs
-public class Dialogue : MonoBehaviour
+public class Radio : MonoBehaviour
 {
-    public TextMeshProUGUI textComponent;
-    [TextArea(3, 10)]
-    public string[] lines;
+    [SerializeField] List<AudioClip> musicList = new();
+    [SerializeField, Range(0f,1f)] float volume = 0.8f;
+    bool mono = false;
 
-    private int index;
-    private PlayerInput playerInput;
-    public UnityEvent<int> onDialogueLineChanged;
-    public string actionMapToDisable = "ControlActions1"; 
-    public bool IsDialogueActive { get; private set; } 
+    SoundObject currentLoop;
+    int lastIndex = -1;
+    bool isPaused = false;
 
-    private void Start()
+    public void PlayNext()
     {
-        textComponent.text = string.Empty;
-        StartDialogue(lines);
+        if (musicList == null || musicList.Count == 0) return;
+
+        isPaused = false;
+
+        int index = lastIndex + 1;
+        if (index >= musicList.Count) index = 0;
+        lastIndex = index;
+
+        if (currentLoop != null) currentLoop.StopPlaying();
+
+        currentLoop = SoundManager.Instance.PlayMusic(
+            musicList[index],
+            transform.position,
+            transform,
+            volume,
+            looping: true,
+            pitch: 1f,
+            fadeOutLength: 0f,
+            mono: mono
+        );
     }
 
-    public void OnPlayerJoined(PlayerInput playerInput)
+    public void TogglePause()
     {
-        if (this.playerInput == null)
+        if (currentLoop == null) return;
+
+        if (!isPaused)
         {
-            this.playerInput = playerInput;
-
-            playerInput.actions["NextDialogue"].performed += OnNextDialoguePerformed;
-            playerInput.actions["PreviousDialogue"].performed += OnPreviousDialoguePerformed; 
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (playerInput != null)
-        {
-            playerInput.actions["NextDialogue"].performed -= OnNextDialoguePerformed;
-            playerInput.actions["PreviousDialogue"].performed -= OnPreviousDialoguePerformed;
-        }
-    }
-
-    private void OnEnable()
-    {
-        if (playerInput != null)
-        {
-            playerInput.actions["NextDialogue"].Enable();
-            playerInput.actions["PreviousDialogue"].Enable();
-        }
-    }
-
-    private void OnNextDialoguePerformed(InputAction.CallbackContext context)
-    {
-        NextLine();
-    }
-
-    private void OnPreviousDialoguePerformed(InputAction.CallbackContext context)
-    {
-        PreviousLine();
-    }
-
-    public void StartDialogue(string[] newLines)
-    {
-        if (newLines == null || newLines.Length == 0)
-        {
-            return;
-        }
-
-        lines = newLines;
-        index = 0;
-        IsDialogueActive = true; 
-        gameObject.SetActive(true); 
-        DisplayLine();
-
-        DisableActionMap();
-    }
-
-    private void DisplayLine()
-    {
-        if (index >= 0 && index < lines.Length)
-        {
-            textComponent.text = lines[index];
-            onDialogueLineChanged?.Invoke(index);
-        }
-    }
-
-    private bool canAdvanceDialogue = true;
-
-    public void NextLine()
-    {
-        if (!canAdvanceDialogue) return;
-
-        StartCoroutine(DebounceDialogueAdvance());
-
-        if (index < lines.Length - 1)
-        {
-            index++;
-            DisplayLine();
+            currentLoop.Pause();
+            isPaused = true;
         }
         else
         {
-            EndDialogue();
-        }
-    }
-
-    private IEnumerator DebounceDialogueAdvance()
-    {
-        canAdvanceDialogue = false;
-        yield return new WaitForSeconds(0.01f); 
-        canAdvanceDialogue = true;
-    }
-
-    public void PreviousLine()
-    {
-        if (index > 0)
-        {
-            index--;
-            DisplayLine();
-        }
-    }
-
-    private void EndDialogue()
-    {
-        IsDialogueActive = false;
-        StartCoroutine(EndDialogueWithDelay(0.05f));
-    }
-
-    private IEnumerator EndDialogueWithDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        gameObject.SetActive(false);
-        textComponent.text = string.Empty;
-        EnableActionMap();
-    }
-    private PlayerInput dialogueControllerPlayer; 
-
-    private void DisableActionMap()
-    {
-        var players = FindObjectsOfType<PlayerInput>();
-
-        foreach (PlayerInput player in players)
-        {
-            if (player == dialogueControllerPlayer)
-            {
-                player.SwitchCurrentActionMap("UI"); 
-            }
-            else
-            {
-                player.SwitchCurrentActionMap("Disabled"); 
-            }
-        }
-    }
-
-    private void EnableActionMap()
-    {
-        foreach (PlayerInput player in FindObjectsOfType<PlayerInput>())
-        {
-            if (player == dialogueControllerPlayer)
-            {
-                player.SwitchCurrentActionMap(actionMapToDisable); 
-            }
-            else
-            {
-                player.SwitchCurrentActionMap("ControlActions1"); 
-            }
+            currentLoop.Resume();
+            isPaused = false;
         }
     }
 }
-
 ```
 </details>
 
 <details>
-  <summary>Show CameraMoverOnEnemyDeath.cs</summary>
+  <summary>Show Radiobutton.cs</summary>
   
 ```cs
-[System.Serializable]
-public class StageDialogue
+public class RadioButton : MonoBehaviour
 {
-    [TextArea(3, 10)]
-    public string[] dialogues;
-}
+    public enum ButtonType { Next, PauseToggle }
 
-public class CameraMoverOnEnemyDeath : MonoBehaviour
-{
-    public GameObject[] enemiesStage1;
-    public GameObject[] enemiesStage2;
-    public GameObject[] enemiesStage3;
-    public Transform[] cameraPositions;
-    public float cameraSpeed = 2f;
-    public Dialogue dialogueSystem;
+    [SerializeField] Radio radio;
+    [SerializeField] ButtonType buttonType;
 
-    public StageDialogue[] stageDialogues;
+    XRSimpleInteractable grab;
 
-    private int currentStage = 0;
-    private bool moveCamera = false;
-
-    void Start()
+    void Awake()
     {
-        if (dialogueSystem == null || stageDialogues == null || stageDialogues.Length == 0)
-        {
-            return;
-        }
-        
-        dialogueSystem.gameObject.SetActive(false);
-    }
-    void Update()
-    {
-        if (currentStage < cameraPositions.Length && AreAllEnemiesDead(GetCurrentEnemies()))
-        {
-            moveCamera = true;
-        }
-
-        if (moveCamera)
-        {
-            MoveCameraToTarget();
-        }
+        grab = GetComponent<XRSimpleInteractable>();
+        var rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
     }
 
-    public IEnumerator ShowDialogueAfterDelay(float delay)
+    void OnEnable()
     {
-        yield return new WaitForSeconds(delay);
-
-        dialogueSystem.gameObject.SetActive(true);
-
-        if (stageDialogues.Length > 0)
-        {
-            dialogueSystem.StartDialogue(stageDialogues[currentStage].dialogues);
-        }
+        grab.selectEntered.AddListener(OnActivated);
     }
 
-    void MoveCameraToTarget()
+    void OnDisable()
     {
-        transform.position = Vector3.MoveTowards(transform.position, cameraPositions[currentStage].position, cameraSpeed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, cameraPositions[currentStage].position) <= 0.1f)
-        {
-            transform.position = cameraPositions[currentStage].position;
-            moveCamera = false;
-            TriggerNextStage();
-        }
+        grab.selectEntered.RemoveListener(OnActivated);
     }
 
-    void TriggerNextStage()
+    void OnActivated(SelectEnterEventArgs _)
     {
-        currentStage++;
-
-        if (currentStage < stageDialogues.Length && dialogueSystem != null)
-        {
-            dialogueSystem.StartDialogue(stageDialogues[currentStage].dialogues);
-        }
-    }
-
-    GameObject[] GetCurrentEnemies()
-    {
-        switch (currentStage)
-        {
-            case 0: return enemiesStage1;
-            case 1: return enemiesStage2;
-            case 2: return enemiesStage3;
-            default: return new GameObject[0];
-        }
-    }
-
-    bool AreAllEnemiesDead(GameObject[] enemies)
-    {
-        foreach (GameObject enemy in enemies)
-        {
-            if (enemy != null)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-}
-```
-  
-</details>
-
-<details>
-  <summary>Show EnableEnemyOnDialogue.cs</summary>
-  
-```cs
-public class EnableEnemyOnDialogue : MonoBehaviour
-{
-    public Dialogue dialogueSystem;
-    public GameObject enemyToEnable; 
-    public int dialogueIndexToEnableEnemy = 1; 
-
-    private bool enemyEnabled = false; 
-
-    private void Start()
-    {
-        if (dialogueSystem != null)
-        {
-            dialogueSystem.onDialogueLineChanged.AddListener(OnDialogueLineChanged);
-        }
-
-        if (enemyToEnable != null)
-        {
-            enemyToEnable.SetActive(false); 
-        }
-    }
-
-    private void OnDialogueLineChanged(int index)
-    {
-        if (!enemyEnabled && index == dialogueIndexToEnableEnemy)
-        {
-            if (enemyToEnable != null)
-            {
-                enemyToEnable.SetActive(true); 
-                enemyEnabled = true; 
-            }
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (dialogueSystem != null)
-        {
-            dialogueSystem.onDialogueLineChanged.RemoveListener(OnDialogueLineChanged);
-        }
+        if (buttonType == ButtonType.Next)
+            radio.PlayNext();
+        else if (buttonType == ButtonType.PauseToggle)
+            radio.TogglePause();
     }
 }
 ```
