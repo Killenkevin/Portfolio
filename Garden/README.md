@@ -7,7 +7,7 @@
 ## _A Brief Project Description_
 Together with my supervisor at inDirection Games, I have spent nearly six months developing a prototype for a game in which players build a civilization in a pixel-art landscape.
 
-[Webpage]((https://indirectiongames.com)) <br>
+<br>
 
 ## _My Roles in the Project_
 
