@@ -9,7 +9,10 @@ If you want to see some of my contributions, click on the folders above. <br>
 <br>
 
 # Project Highlights
-![sunseed_banner](/PortfolioBilder/gardensettlers_night.png)
+![garden_banner](/PortfolioBilder/gardensettlers_night.png)
+
+
+## [___Game Prototype___](/Garden) &nbsp; ← Click for more!
 
 ---
 
