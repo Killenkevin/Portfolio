@@ -9,7 +9,7 @@ If you want to see some of my contributions, click on the folders above. <br>
 <br>
 
 # Project Highlights
-![sunseed_banner](/PortfolioBilder/gardensettlers night.png)
+![sunseed_banner](/PortfolioBilder/gardensettlers_night.png)
 
 ---
 
