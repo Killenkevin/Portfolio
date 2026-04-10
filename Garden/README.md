@@ -1,6 +1,6 @@
-# __Sun Seed Vegan Knights__
+# __Game Prototype__
 
-![sunseed_banner](/_Images/ZmxUP5.png)
+![sunseed_banner](/PortfolioBilder/gardensettlers_day.png)
 
 
 ## ___Sun Seed Vegan Knights___
