@@ -21,7 +21,7 @@ Created some pixel art, including simple icons and visual effects.
 
 # Examples
 
-### Traits
+### Trait effects
 	
 
 <details>
