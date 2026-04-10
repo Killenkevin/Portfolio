@@ -19,24 +19,19 @@ Worked on implementing traits: each character has random attributes that affect 
 
 Created some pixel art, including simple icons and visual effects.
 
-# Contributions 
+# Examples
 
 ### Traits
 	
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="/PortfolioGifs/Frog.gif" alt="juice1" width="800" height="auto"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
-|:---:|
-
-
-> *In the GIFs, you can see the frog grabbing an enemy and eating it.*
 
 <details>
-  <summary>Frog!</summary>
+  <summary>Traits</summary>
 
 #### The Idea
-The concept was to make an objective that assists you in combat.
+Peronalize each resident with different positive or/and negative effects
 
 #### The Logic
-To have the frog assist you in combat you have to water it which is a core mechanic in Sun Seed. After you have watered it to the required number it starts shooting out its tounge at the nearest "Enemy" tagged object. The frog launches its toungue as a linerenderer, grabs enemy, eats it (destroys enemy) and it resets the timer.
+When a resident moves into your village they get assigned a trait at random. Each level up grants an additional trait.
 
 <br>
 
