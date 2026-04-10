@@ -20,16 +20,16 @@ Team:       4 programmers
 </table>
 
 ## _A Brief Game Description_
-Hot Dog Madness, an emerging VR game where you work as a hot dog man. Fast paced game with a variation of orders and levels.
+Hot Dog Madness is an emerging VR game where the player takes on the role of a hot dog vendor in a fast-paced, high-pressure environment. The gameplay revolves around preparing and serving orders efficiently across a variety of levels, each introducing new challenges, increasing complexity, and a wider range of customer demands.
 
 
 ## _My Roles in the Project_
 
-I took it upon myself to make various mechanics such as the condiments, radio and all the sound in the game. 
+I was responsible for designing and implementing several core interactive systems, including the condiment mechanics, the in-game radio, and the overall sound design.
 
-My most significant contribution was the development of the condiments aswell as finding, mixing and implementing sounds to everything in the game.
+My most significant contribution was the development of the condiment system. This involved creating interactive mechanics that allowed players to intuitively apply different condiments in a VR environment, ensuring responsiveness, accuracy, and a satisfying user experience.
 
-Below you’ll find a list of a few features I created and implemented myself, along with summaries of my code.
+In addition, I handled all aspects of the game’s audio. This included sourcing, editing, and mixing sound effects, as well as implementing them in the game to match player interactions and environmental feedback. I focused on creating a cohesive and immersive soundscape that enhances the gameplay and reinforces player actions.
 
 # Contributions 
 
