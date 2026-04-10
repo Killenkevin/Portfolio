@@ -1,12 +1,17 @@
-# Kevin Körmark's Portfolio
+#<h1 align="center"> Kevin Körmark </h1>
 
-Hi, ___welcome___ to my portfolio.
+<p align="center">
+   Game Programmer | Unity Developer <br>
+  Building interactive systems, gameplay mechanics, and immersive experiences
+</p>
 
-### Info
+---
 
-Below you can find previews of my highlighted projects. <br>
-If you want to see some of my contributions, click on the folders above. <br>
-<br>
+<h2>About</h2>
+Welcome to my portfolio.
+Here you can explore a selection of my projects and contributions.
+
+Each project includes a breakdown of my role, implemented systems, and technical work.
 
 # Project Highlights
 ![garden_banner](/PortfolioBilder/gardensettlers_night.png)
@@ -43,7 +48,9 @@ Team:       3 Programmers, 4 Artist
 ---
 ---
 
-![hotdog_banner](/PortfolioBilder/hotdog1.png)
+<div style="height: 200px; overflow: hidden;">
+  <img src="/PortfolioBilder/hotdogmadness.png" alt="hotdog_banner">
+</div>
 
 
 ## [___Hot Dog Madness___](/HotdogMadness) &nbsp; ← Click for more!
