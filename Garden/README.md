@@ -46,17 +46,43 @@ namespace Gardens.Data;
 public enum GnomeTrait
 {
     None = 0,
-    Foodie = 1,    // Eats more often.
-    Learner = 2,   // Earns more XP.
-    Speedy = 3,    // Increases speed.
-    // Worker = 4, // Works more often.
-    Lazy = 4,      // Works less often.                
-    Swimmer = 5,   // Swims a lot faster.            
-    Calm = 6,      // Less fear effect.
-    Nightowl = 7,  // Stays up longer.
-    Energetic = 8, // Energy lasts longer.
+    /// <summary>
+    /// Eats more often.
+    /// </summary>
+    Foodie = 1,
+    /// <summary>
+    /// Earns more XP.
+    /// </summary>
+    Learner = 2,
+    /// <summary>
+    /// Increases speed a bit.
+    /// </summary>
+    Speedy = 3,
+    /// <summary>
+    /// Works more often.
+    /// </summary>
+    //Worker = 4,
+    /// <summary>
+    /// Works less often.
+    /// </summary>
+    Lazy = 4,
+    /// <summary>
+    /// Swims a lot faster.
+    /// </summary>
+    Swimmer = 5,
+    /// <summary>
+    /// Less fear effect.
+    /// </summary>
+    Calm = 6,
+    Nightowl = 7,           // Not in effect
+    /// <summary>
+    /// Energy lasts longer.
+    /// </summary>
+    Energetic = 8,
     Max = Energetic,
 }
+
+
 
 
 ```
